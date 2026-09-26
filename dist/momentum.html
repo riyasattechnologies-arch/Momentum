@@ -1,0 +1,1252 @@
+<title>Momentum</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Momentum — AI accountability buddy
+   Palette: chalk ground, deep ink, cobalt accent, streak amber */
+:root {
+  --ground: #EEF0EC;
+  --surface: #FFFFFF;
+  --surface-2: #F6F7F4;
+  --ink: #15201B;
+  --muted: #5B6862;
+  --line: #D9DED8;
+  --accent: #2743C9;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E3E8FB;
+  --amber: #E3A008;
+  --amber-soft: #FCF1D2;
+  --good: #1E8A4C;
+  --good-soft: #DDF2E5;
+  --bad: #C2372B;
+  --bad-soft: #FAE1DE;
+  --g1: #2743C9; --g2: #1E8A4C; --g3: #C2572B; --g4: #8A3FB8; --g5: #0E8A94;
+  --shadow: 0 1px 2px rgba(21, 32, 27, .06), 0 4px 16px rgba(21, 32, 27, .05);
+  --radius: 14px;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0E1311; --surface: #171E1B; --surface-2: #1D2622;
+    --ink: #E6ECE8; --muted: #9AA8A1; --line: #2A3530;
+    --accent: #8298FF; --accent-ink: #0E1311; --accent-soft: #1F2747;
+    --amber: #F2C04B; --amber-soft: #3A2F12;
+    --good: #5CCB8A; --good-soft: #15321F; --bad: #F08074; --bad-soft: #3B1C19;
+    --g1: #8298FF; --g2: #5CCB8A; --g3: #F09A6E; --g4: #C595EE; --g5: #5CC8D1;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0E1311; --surface: #171E1B; --surface-2: #1D2622;
+  --ink: #E6ECE8; --muted: #9AA8A1; --line: #2A3530;
+  --accent: #8298FF; --accent-ink: #0E1311; --accent-soft: #1F2747;
+  --amber: #F2C04B; --amber-soft: #3A2F12;
+  --good: #5CCB8A; --good-soft: #15321F; --bad: #F08074; --bad-soft: #3B1C19;
+  --g1: #8298FF; --g2: #5CCB8A; --g3: #F09A6E; --g4: #C595EE; --g5: #5CC8D1;
+  --shadow: 0 1px 2px rgba(0,0,0,.4);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font: 16px/1.5 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: 1.9rem; font-weight: 800; }
+h2 { font-size: 1.3rem; font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 700; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+
+/* Shell */
+.app { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 16px 104px; display: flex; flex-direction: column; gap: 16px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; }
+.brand-mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; }
+.brand-mark svg { width: 18px; height: 18px; }
+.streak-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--amber-soft); color: var(--ink); border-radius: 999px; padding: 4px 12px; font-weight: 700; font-size: .9rem; }
+.streak-pill svg { width: 16px; height: 16px; fill: var(--amber); }
+
+.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  display: flex; justify-content: center; gap: 4px;
+}
+.tabs button {
+  flex: 1; max-width: 150px; border: 0; background: none; padding: 6px 4px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .78rem; color: var(--muted); cursor: pointer;
+}
+.tabs button svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+
+/* Cards */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* Buddy card */
+.buddy { background: var(--accent); color: var(--accent-ink); border: 0; box-shadow: var(--shadow); }
+.buddy .eyebrow { color: inherit; opacity: .8; }
+.buddy-row { display: flex; gap: 14px; align-items: flex-start; }
+.buddy-face { flex: none; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; }
+:root[data-theme="dark"] .buddy-face { background: rgba(0,0,0,.15); }
+.buddy-face svg { width: 30px; height: 30px; }
+.buddy-msg { font-size: 1.08rem; line-height: 1.45; }
+.buddy-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.buddy .btn { background: rgba(255,255,255,.16); color: inherit; border-color: transparent; }
+.buddy .btn:hover { background: rgba(255,255,255,.26); }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.stat b { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .8rem; color: var(--muted); }
+
+/* Tasks */
+.task-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.task { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.task:first-child { border-top: 0; }
+.check {
+  flex: none; width: 26px; height: 26px; border-radius: 8px; border: 2px solid var(--line); background: var(--surface-2);
+  display: grid; place-items: center; cursor: pointer; padding: 0;
+}
+.check svg { width: 16px; height: 16px; stroke: var(--accent-ink); stroke-width: 3; fill: none; opacity: 0; }
+.task.done .check { background: var(--good); border-color: var(--good); }
+.task.done .check svg { opacity: 1; stroke: #fff; }
+.task-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.task-title { overflow-wrap: anywhere; }
+.task.done .task-title { text-decoration: line-through; color: var(--muted); }
+.task-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: .8rem; color: var(--muted); }
+.goal-name { display: inline-flex; align-items: center; gap: 6px; }
+.dot { flex: none; width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.tag { font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+.tag.overdue { background: var(--bad-soft); color: var(--bad); }
+.tag.ai { background: var(--accent-soft); color: var(--accent); }
+.tag.offline { background: var(--surface-2); color: var(--muted); border: 1px solid var(--line); }
+.icon-btn { flex: none; border: 0; background: none; color: var(--muted); padding: 6px; border-radius: 8px; cursor: pointer; display: grid; place-items: center; }
+.icon-btn:hover { background: var(--surface-2); color: var(--ink); }
+.icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Buttons & forms */
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 10px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.danger { color: var(--bad); }
+.btn.block { width: 100%; padding: 12px; }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.row > .grow { flex: 1; min-width: 180px; }
+form { display: flex; flex-direction: column; gap: 14px; }
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: .92rem; }
+label .hint { font-weight: 400; color: var(--muted); font-size: .82rem; }
+input[type="text"], input[type="date"], input[type="time"], input[type="number"], input[type="password"], select, textarea {
+  width: 100%; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-weight: 400;
+}
+textarea { resize: vertical; min-height: 72px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { border: 1px solid var(--line); background: var(--surface-2); border-radius: 12px; padding: 10px; cursor: pointer; font-weight: 400; gap: 2px; }
+.seg label b { font-family: var(--font-display); }
+.seg label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.seg label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+.error { color: var(--bad); font-size: .85rem; font-weight: 700; }
+.notice { background: var(--amber-soft); border-radius: 10px; padding: 10px 12px; font-size: .9rem; }
+
+/* Plan timeline */
+.goal-switch { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
+.chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 14px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: .9rem; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.phase { border-left: 3px solid var(--pc, var(--accent)); padding-left: 14px; display: flex; flex-direction: column; gap: 8px; }
+.phase-head { display: flex; flex-direction: column; gap: 2px; }
+.week { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+.week summary { list-style: none; cursor: pointer; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.week summary::-webkit-details-marker { display: none; }
+.week summary .wk { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); white-space: nowrap; }
+.week[open] summary { border-bottom: 1px solid var(--line); }
+.week .task-list { padding: 4px 14px; }
+.week.current { border-color: var(--accent); }
+.bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.bar > i { display: block; height: 100%; background: var(--pc, var(--accent)); border-radius: 999px; }
+.edit-input { width: 100%; border: 1px solid var(--accent); border-radius: 8px; padding: 6px 8px; background: var(--surface); }
+
+/* Progress chart */
+.week-chart { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; align-items: end; height: 150px; padding-top: 8px; }
+.week-chart .col { display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.week-chart .b { width: 100%; max-width: 36px; background: var(--accent); border-radius: 6px 6px 2px 2px; min-height: 3px; }
+.week-chart .b.zero { background: var(--line); }
+.week-chart .v { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); }
+.week-chart .d { font-size: .75rem; color: var(--muted); }
+.week-chart .col.today .d { color: var(--ink); font-weight: 700; }
+
+/* Overlay + toast */
+.overlay { position: fixed; inset: 0; background: rgba(14, 19, 17, .55); display: grid; place-items: center; z-index: 50; padding: 16px; }
+.overlay .card { max-width: 420px; width: 100%; text-align: center; align-items: center; }
+.spinner { width: 36px; height: 36px; border-radius: 50%; border: 4px solid var(--accent-soft); border-top-color: var(--accent); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--ground); padding: 10px 16px; border-radius: 10px; z-index: 60; font-weight: 700; max-width: calc(100% - 32px); }
+.empty { text-align: center; padding: 20px 8px; color: var(--muted); display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.welcome h1 { font-size: 2.2rem; }
+.welcome .lede { font-size: 1.1rem; color: var(--muted); max-width: 52ch; }
+.ladder { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.ladder span { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-weight: 700; }
+.ladder i { color: var(--muted); font-style: normal; }
+textarea.code { font-family: var(--font-mono); font-size: .75rem; min-height: 140px; }
+
+@media (max-width: 520px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  h1 { font-size: 1.6rem; }
+  .welcome h1 { font-size: 1.85rem; }
+  .stat b { font-size: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+</style>
+<div id="app"></div>
+<script>
+/* Momentum planner
+   - planWithGemini(): asks Google Gemini for a structured plan (JSON)
+   - planOffline(): rule-based planner used when there is no API key or the AI call fails
+   Both return the same shape:
+   { phases: [{ title, summary, weeks: [{ title, tasks: [{ day, title, minutes }] }] }] }
+   where `day` is 0-6 (days after the week's start). */
+
+const Planner = (() => {
+  const DAY = 86400000;
+
+  const iso = (d) => {
+    const x = new Date(d);
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`;
+  };
+  const parse = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+  const weeksBetween = (a, b) => Math.max(1, Math.ceil((parse(b) - parse(a) + DAY) / (7 * DAY)));
+
+  // ---------- Offline knowledge base ----------
+  const LIB = {
+    career: {
+      match: /intern|job|career|resume|cv\b|hired|placement|offer|interview/i,
+      phases: [
+        { title: 'Foundation', summary: 'Know the target and fix your materials.', share: .25,
+          milestones: ['Pick 3 target roles and 20 companies', 'Resume v1 reviewed by a senior', 'LinkedIn + GitHub cleaned up', 'Portfolio project chosen'],
+          tasks: ['Research {n} job posts and list required skills', 'Rewrite one resume section with numbers', 'Update LinkedIn headline and about', 'Ask one senior or career centre for feedback', 'Add a README to your best repo'] },
+        { title: 'Skill building', summary: 'Close the gaps the job posts showed.', share: .35,
+          milestones: ['Core skill gap #1 closed', 'Portfolio project MVP', 'Data structures practice routine', 'Portfolio project polished and deployed'],
+          tasks: ['Solve 2 practice problems (LeetCode/HackerRank)', 'Build one feature of your portfolio project', 'Watch/read one tutorial on your gap skill and take notes', 'Push code and write a short progress note', 'Explain a concept out loud as if teaching it'] },
+        { title: 'Applications', summary: 'Ship applications every week.', share: .25,
+          milestones: ['First 10 applications sent', 'Referral outreach', '25 applications sent', 'Follow-ups done'],
+          tasks: ['Send {n} tailored applications', 'Message one alum or engineer for a referral', 'Tailor resume keywords for one company', 'Log applications in your tracker', 'Follow up on applications older than a week'] },
+        { title: 'Interviews', summary: 'Practise until it feels routine.', share: .15,
+          milestones: ['Behavioural stories ready (STAR)', 'Two mock interviews done', 'Offer-ready'],
+          tasks: ['Write one STAR story', 'Do a 30-minute mock interview (Pramp or a friend)', 'Review a company before an interview', 'Solve one timed problem', 'Prepare 3 questions to ask interviewers'] }
+      ]
+    },
+    fitness: {
+      match: /run|marathon|5k|10k|gym|fit|weight|muscle|lose|workout|pushup|pull-?up|health/i,
+      phases: [
+        { title: 'Base', summary: 'Build the habit before the intensity.', share: .3,
+          milestones: ['Show up 3 times this week', 'Baseline measurements taken', 'Consistent routine', 'Base block complete'],
+          tasks: ['Easy session: 25 minutes at conversational effort', 'Mobility and stretching, 15 minutes', 'Log sleep and water today', 'Full-body strength circuit', 'Walk 8,000 steps'] },
+        { title: 'Build', summary: 'Increase volume about 10% a week.', share: .4,
+          milestones: ['Volume +10%', 'First hard session', 'Longest session so far', 'Recovery week'],
+          tasks: ['Interval session: 6 × 2 min hard, 2 min easy', 'Long session at easy effort', 'Strength: legs and core', 'Recovery: mobility + foam roll', 'Plan meals for tomorrow'] },
+        { title: 'Peak', summary: 'Sharpen and test yourself.', share: .2,
+          milestones: ['Test session / time trial', 'Peak volume week'],
+          tasks: ['Goal-pace session', 'Time trial or max-effort test', 'Strength maintenance', 'Easy recovery session'] },
+        { title: 'Taper & goal day', summary: 'Rest, then perform.', share: .1,
+          milestones: ['Taper week', 'Goal day'],
+          tasks: ['Short easy session', 'Prepare kit and plan for goal day', 'Sleep 8 hours', 'Light activation session'] }
+      ]
+    },
+    exam: {
+      match: /exam|gpa|grade|test|sat|gre|ielts|toefl|semester|course|midterm|final|study/i,
+      phases: [
+        { title: 'Map the syllabus', summary: 'Know exactly what will be tested.', share: .2,
+          milestones: ['Syllabus mapped into topics', 'Weak topics identified'],
+          tasks: ['List every topic in the syllabus', 'Rate each topic 1–5 by confidence', 'Collect past papers and notes', 'Make a one-page summary of topic {n}'] },
+        { title: 'Learn', summary: 'Work through weak topics first.', share: .45,
+          milestones: ['Weak topics round 1', 'Weak topics round 2', 'Medium topics covered', 'All topics touched once'],
+          tasks: ['Study one weak topic with active recall', 'Make flashcards for today\'s topic', 'Solve 10 practice questions', 'Teach the topic to a friend or rubber duck', 'Review yesterday\'s flashcards'] },
+        { title: 'Practise', summary: 'Past papers under time.', share: .25,
+          milestones: ['First timed past paper', 'Mistake log reviewed', 'Second timed past paper'],
+          tasks: ['Do one timed past paper section', 'Review mistakes and log why', 'Redo questions you got wrong', 'Flashcard review, 20 minutes'] },
+        { title: 'Final review', summary: 'Consolidate and rest.', share: .1,
+          milestones: ['Final revision', 'Exam day'],
+          tasks: ['Skim your one-page summaries', 'Light flashcard review', 'Prepare materials and sleep early'] }
+      ]
+    },
+    language: {
+      match: /language|spanish|french|german|arabic|chinese|japanese|korean|english|urdu|fluent|speak/i,
+      phases: [
+        { title: 'Foundations', summary: 'Sounds, basics, first 300 words.', share: .3,
+          milestones: ['Alphabet/pronunciation', 'First 150 words', 'First 300 words', 'Basic sentences'],
+          tasks: ['15 minutes of Duolingo or a textbook lesson', 'Learn 15 new words with spaced repetition', 'Shadow a 2-minute audio clip', 'Write 5 simple sentences'] },
+        { title: 'Comprehension', summary: 'Lots of input.', share: .35,
+          milestones: ['Understand a slow podcast', 'Grammar core', 'Read a short story'],
+          tasks: ['Listen to a learner podcast episode', 'Read one graded-reader chapter', 'Grammar drill, 20 minutes', 'Review vocabulary deck'] },
+        { title: 'Speaking', summary: 'Talk every week.', share: .35,
+          milestones: ['First conversation with a tutor', 'Weekly conversations', '10-minute conversation'],
+          tasks: ['30-minute conversation (iTalki/tandem partner)', 'Record yourself speaking for 3 minutes', 'Write a short journal entry', 'Learn 10 phrases you missed in conversation'] }
+      ]
+    },
+    build: {
+      match: /app|startup|launch|build|project|website|product|saas|game|hackathon|portfolio|ship/i,
+      phases: [
+        { title: 'Discover', summary: 'Validate the problem and scope the MVP.', share: .2,
+          milestones: ['Problem validated with 5 people', 'MVP scope and wireframes'],
+          tasks: ['Interview one potential user', 'Write the problem statement and user stories', 'Sketch wireframes for key screens', 'Pick the tech stack and set up the repo'] },
+        { title: 'Build the MVP', summary: 'Small, working increments.', share: .45,
+          milestones: ['Core feature working', 'Data saved and loaded', 'Second feature working', 'End-to-end flow complete'],
+          tasks: ['Build one small feature end to end', 'Write tests or a manual test checklist for today\'s work', 'Commit and push with a clear message', 'Fix the top bug from your list', 'Refactor one messy part'] },
+        { title: 'Launch', summary: 'Put it in front of real users.', share: .2,
+          milestones: ['Deployed publicly', 'First 10 users'],
+          tasks: ['Deploy and test on a phone', 'Write a launch post', 'Share with 5 people and collect feedback', 'Set up simple analytics'] },
+        { title: 'Iterate', summary: 'Improve from feedback.', share: .15,
+          milestones: ['Feedback round 1 shipped', 'Next version planned'],
+          tasks: ['Group feedback into themes', 'Ship the most requested fix', 'Update README and demo video'] }
+      ]
+    },
+    generic: {
+      match: /.*/,
+      phases: [
+        { title: 'Clarify', summary: 'Define what done looks like.', share: .2,
+          milestones: ['Goal defined with a measurable outcome', 'Resources and people identified'],
+          tasks: ['Write what success looks like in one sentence', 'List the 5 biggest steps between you and the goal', 'Find one person who has done this and read/watch their story', 'Gather the resources you need'] },
+        { title: 'Build skills', summary: 'Do the core work every week.', share: .45,
+          milestones: ['First step complete', 'Second step complete', 'Halfway checkpoint', 'Third step complete'],
+          tasks: ['Focused work session on the current step', 'Practise the hardest part for 30 minutes', 'Write a short progress note', 'Ask for feedback from someone ahead of you'] },
+        { title: 'Execute', summary: 'Produce visible results.', share: .25,
+          milestones: ['Visible result #1', 'Visible result #2'],
+          tasks: ['Ship or publish one piece of work', 'Measure your progress against the goal', 'Remove one obstacle that slowed you down'] },
+        { title: 'Finish', summary: 'Close it out and reflect.', share: .1,
+          milestones: ['Final push', 'Goal reached'],
+          tasks: ['Finish the last open item', 'Write a reflection: what worked and what didn\'t'] }
+      ]
+    }
+  };
+
+  function pickCategory(text) {
+    for (const key of ['career', 'fitness', 'language', 'exam', 'build']) {
+      if (LIB[key].match.test(text)) return key;
+    }
+    return 'generic';
+  }
+
+  function sessionsFor(hoursPerWeek) {
+    const sessions = Math.min(6, Math.max(3, Math.round(hoursPerWeek / 1.5)));
+    const minutes = Math.max(20, Math.min(120, Math.round((hoursPerWeek * 60 - 20) / sessions / 5) * 5));
+    const spread = { 3: [0, 2, 4], 4: [0, 1, 3, 4], 5: [0, 1, 2, 3, 4], 6: [0, 1, 2, 3, 4, 5] }[sessions];
+    return { sessions, minutes, days: spread };
+  }
+
+  function allocateWeeks(phases, total) {
+    const counts = phases.map((p) => Math.max(1, Math.round(p.share * total)));
+    let diff = total - counts.reduce((a, b) => a + b, 0);
+    let i = counts.length - 1;
+    while (diff !== 0 && i >= 0) {
+      if (diff > 0) { counts[1 % counts.length]++; diff--; }
+      else if (counts[i] > 1) { counts[i]--; diff++; } else { i--; }
+    }
+    // If total < number of phases, drop trailing phases
+    while (counts.reduce((a, b) => a + b, 0) > total && counts.length > 1) counts.pop();
+    return counts;
+  }
+
+  function planOffline(goal, profile, startDate) {
+    const key = pickCategory(`${goal.title} ${goal.why || ''}`);
+    const lib = LIB[key];
+    const total = Math.min(52, weeksBetween(startDate, goal.deadline));
+    const counts = allocateWeeks(lib.phases, total);
+    const { minutes, days } = sessionsFor(Number(profile.hoursPerWeek) || 5);
+    let taskCursor = 0;
+    const phases = counts.map((count, pi) => {
+      const src = lib.phases[pi];
+      const weeks = [];
+      for (let w = 0; w < count; w++) {
+        const m = src.milestones[w % src.milestones.length];
+        const round = Math.floor(w / src.milestones.length);
+        const title = round > 0 ? `${m} (round ${round + 1})` : m;
+        const tasks = days.map((day) => {
+          const t = src.tasks[taskCursor++ % src.tasks.length].replace('{n}', String(3 + (w % 3)));
+          return { day, title: t, minutes };
+        });
+        tasks.push({ day: 6, title: `Weekly review: did you hit "${title}"? Plan next week`, minutes: 15 });
+        weeks.push({ title, tasks });
+      }
+      return { title: src.title, summary: src.summary, weeks };
+    });
+    return { phases, category: key };
+  }
+
+  // ---------- Gemini ----------
+  async function planWithGemini(goal, profile, startDate, apiKey, model) {
+    const totalWeeks = Math.min(52, weeksBetween(startDate, goal.deadline));
+    const detailWeeks = Math.min(totalWeeks, 12);
+    const prompt = `You are an expert coach who turns ambitious goals into realistic plans.
+Today is ${startDate}. The user's goal: "${goal.title}".
+Why it matters to them: "${goal.why || 'not given'}". Current level: ${goal.level}.
+Deadline: ${goal.deadline} (${totalWeeks} weeks from today). Time available: ${profile.hoursPerWeek} hours per week.
+
+Break the goal into 2-5 phases (like semester/month blocks). Across all phases there must be exactly ${totalWeeks} weeks in order, week 1 starting today.
+Each week has one milestone title (a concrete outcome). For the first ${detailWeeks} weeks, include 3-6 daily tasks per week; for later weeks, return an empty tasks array.
+Each task: "day" = integer 0-6 (days after the week start), "title" = specific action a student can do in one sitting (start with a verb, under 90 characters), "minutes" = 15-120.
+Total task minutes per week must not exceed ${Math.round(profile.hoursPerWeek * 60)}.
+Include a short weekly review task on day 6.`;
+
+    const schema = {
+      type: 'OBJECT',
+      properties: {
+        phases: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              title: { type: 'STRING' },
+              summary: { type: 'STRING' },
+              weeks: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    title: { type: 'STRING' },
+                    tasks: {
+                      type: 'ARRAY',
+                      items: {
+                        type: 'OBJECT',
+                        properties: { day: { type: 'INTEGER' }, title: { type: 'STRING' }, minutes: { type: 'INTEGER' } },
+                        required: ['day', 'title', 'minutes']
+                      }
+                    }
+                  },
+                  required: ['title', 'tasks']
+                }
+              }
+            },
+            required: ['title', 'summary', 'weeks']
+          }
+        }
+      },
+      required: ['phases']
+    };
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: 'application/json', responseSchema: schema, temperature: 0.6 }
+      })
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`Gemini returned ${res.status}. ${body.slice(0, 160)}`);
+    }
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('') || '';
+    const plan = JSON.parse(text);
+    return validate(plan, goal, profile, startDate);
+  }
+
+  // Make sure the AI output is usable; fill missing tasks with the offline templates.
+  function validate(plan, goal, profile, startDate) {
+    if (!plan || !Array.isArray(plan.phases) || !plan.phases.length) throw new Error('AI plan had no phases');
+    const fallback = planOffline(goal, profile, startDate);
+    const fbWeeks = fallback.phases.flatMap((p) => p.weeks);
+    let wi = 0;
+    plan.phases = plan.phases.filter((p) => p && Array.isArray(p.weeks) && p.weeks.length).map((p) => ({
+      title: String(p.title || 'Phase').slice(0, 60),
+      summary: String(p.summary || '').slice(0, 200),
+      weeks: p.weeks.map((w) => {
+        let tasks = Array.isArray(w.tasks) ? w.tasks : [];
+        tasks = tasks.filter((t) => t && t.title).map((t) => ({
+          day: Math.min(6, Math.max(0, parseInt(t.day, 10) || 0)),
+          title: String(t.title).slice(0, 140),
+          minutes: Math.min(180, Math.max(10, parseInt(t.minutes, 10) || 30))
+        }));
+        if (!tasks.length) {
+          const fb = fbWeeks[Math.min(wi, fbWeeks.length - 1)];
+          tasks = fb.tasks.map((t) => ({ ...t }));
+        }
+        wi++;
+        return { title: String(w.title || `Week ${wi}`).slice(0, 120), tasks };
+      })
+    }));
+    if (!plan.phases.length) throw new Error('AI plan had no weeks');
+    return plan;
+  }
+
+  async function checkInWithGemini(context, apiKey, model) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: context }] }],
+        generationConfig: { temperature: 0.9, maxOutputTokens: 120 }
+      })
+    });
+    if (!res.ok) throw new Error(`Gemini returned ${res.status}`);
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join('').trim();
+    if (!text) throw new Error('Empty response');
+    return text.replace(/^["']|["']$/g, '');
+  }
+
+  return { planOffline, planWithGemini, checkInWithGemini, iso, parse, addDays, weeksBetween, pickCategory };
+})();
+
+/* Momentum — AI accountability buddy
+   Vanilla JS single-page app. All data lives in localStorage on the user's device. */
+
+(() => {
+  const { iso, parse, addDays } = Planner;
+  const STORE_KEY = 'momentum.v1';
+  const DEFAULT_MODEL = 'gemini-2.5-flash';
+  const GOAL_COLORS = ['var(--g1)', 'var(--g2)', 'var(--g3)', 'var(--g4)', 'var(--g5)'];
+
+  // ---------- State ----------
+  const blank = () => ({ profile: null, goals: [], tasks: [], checkins: {}, notified: {} });
+  let state = load();
+  const ui = { view: state.profile ? (state.goals.length ? 'today' : 'newgoal') : 'welcome', planGoal: null, editing: null, confirm: null, busy: null, toast: null, exportPanel: null, error: null, variant: 0 };
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return blank();
+      const s = JSON.parse(raw);
+      return { ...blank(), ...s };
+    } catch { return blank(); }
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch { /* storage unavailable: keep working in memory */ }
+  }
+
+  const uid = () => Math.random().toString(36).slice(2, 10);
+  const today = () => iso(new Date());
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtDate = (s, opts = { weekday: 'short', day: 'numeric', month: 'short' }) => parse(s).toLocaleDateString(undefined, opts);
+  const daysLeft = (s) => Math.round((parse(s) - parse(today())) / 86400000);
+  const goalById = (id) => state.goals.find((g) => g.id === id);
+  const fmtTime = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); const d = new Date(); d.setHours(h, m); return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); };
+
+  // ---------- Stats ----------
+  function doneDates() { return new Set(state.tasks.filter((t) => t.done && t.doneAt).map((t) => t.doneAt)); }
+  // A day counts toward the streak if you finished at least one task.
+  // Rest days (nothing scheduled, nothing done) don't break it; a scheduled day with nothing done does.
+  function firstDay() { return state.goals.reduce((m, g) => (g.createdAt < m ? g.createdAt : m), today()); }
+  function streak() {
+    const days = doneDates();
+    const sched = new Set(state.tasks.map((t) => t.date));
+    const first = firstDay();
+    let d = today();
+    if (!days.has(d)) d = addDays(d, -1);
+    let n = 0;
+    while (d >= first) {
+      if (days.has(d)) n++;
+      else if (sched.has(d)) break;
+      d = addDays(d, -1);
+    }
+    return n;
+  }
+  function bestStreak() {
+    const days = doneDates();
+    const sched = new Set(state.tasks.map((t) => t.date));
+    let best = 0, run = 0;
+    for (let d = firstDay(); d <= today(); d = addDays(d, 1)) {
+      if (days.has(d)) { run++; best = Math.max(best, run); }
+      else if (sched.has(d) && d !== today()) run = 0;
+    }
+    return best;
+  }
+  function todayTasks() {
+    const t = today();
+    return state.tasks.filter((x) => x.date === t || (x.date < t && !x.done))
+      .sort((a, b) => (a.done - b.done) || a.date.localeCompare(b.date) || a.goalId.localeCompare(b.goalId));
+  }
+  function goalStats(g) {
+    const ts = state.tasks.filter((t) => t.goalId === g.id);
+    const done = ts.filter((t) => t.done).length;
+    const due = ts.filter((t) => t.date <= today()).length;
+    const doneDue = ts.filter((t) => t.date <= today() && t.done).length;
+    return { total: ts.length, done, due, doneDue, pct: ts.length ? Math.round((done / ts.length) * 100) : 0, onTrack: due === 0 || doneDue / due >= 0.7 };
+  }
+
+  // ---------- Plan materialisation ----------
+  function materialise(goal, plan, startDate) {
+    goal.phases = [];
+    const tasks = [];
+    let weekIdx = 0;
+    plan.phases.forEach((p) => {
+      const phase = { id: uid(), title: p.title, summary: p.summary, weeks: [] };
+      p.weeks.forEach((w) => {
+        const start = addDays(startDate, weekIdx * 7);
+        if (start > goal.deadline) return;
+        phase.weeks.push({ idx: weekIdx, start, title: w.title });
+        w.tasks.forEach((t) => {
+          const date = addDays(start, t.day);
+          if (date > goal.deadline) return;
+          tasks.push({ id: uid(), goalId: goal.id, phaseId: phase.id, weekIdx, date, title: t.title, minutes: t.minutes, done: false, doneAt: null });
+        });
+        weekIdx++;
+      });
+      if (phase.weeks.length) {
+        phase.start = phase.weeks[0].start;
+        phase.end = addDays(phase.weeks[phase.weeks.length - 1].start, 6);
+        goal.phases.push(phase);
+      }
+    });
+    state.tasks = state.tasks.filter((t) => t.goalId !== goal.id).concat(tasks);
+  }
+
+  async function buildPlan(goal, startDate = today()) {
+    const p = state.profile;
+    if (p.apiKey) {
+      try {
+        const plan = await Planner.planWithGemini(goal, p, startDate, p.apiKey, p.model || DEFAULT_MODEL);
+        goal.source = 'gemini';
+        materialise(goal, plan, startDate);
+        return null;
+      } catch (e) {
+        const plan = Planner.planOffline(goal, p, startDate);
+        goal.source = 'offline';
+        materialise(goal, plan, startDate);
+        return `Gemini couldn't build the plan (${e.message}). Used the built-in planner instead.`;
+      }
+    }
+    const plan = Planner.planOffline(goal, p, startDate);
+    goal.source = 'offline';
+    materialise(goal, plan, startDate);
+    return null;
+  }
+
+  // ---------- Buddy ----------
+  const BUDDY = {
+    gentle: {
+      name: 'Gentle',
+      desc: 'Kind and patient',
+      noGoals: ['Hi {name}. Whenever you are ready, tell me one thing you want to achieve and we will map it out together.'],
+      start: ['Morning, {name}. {ntasks} today. Start with "{task}" and see how it feels.', 'Hey {name}, today is a fresh page. Just "{task}" first, the rest will follow.'],
+      progress: ['Nice, {done} down and {left} to go. You are doing well, {name}.', 'Good work so far. "{task}" is next whenever you are ready.'],
+      allDone: ['Everything done for today. Be proud of that, {name}, and rest well.', 'All {done} tasks finished. That is how big goals get built.'],
+      missed: ['Yesterday slipped, and that is okay. One task today restarts everything. How about "{task}"?'],
+      streak: ['{streak} days in a row, {name}. That consistency is quietly adding up.']
+    },
+    coach: {
+      name: 'Coach',
+      desc: 'Upbeat and direct',
+      noGoals: ['Let\'s go, {name}! Give me a big goal and a deadline and I\'ll build you the game plan.'],
+      start: ['Game day, {name}. {ntasks} on the board. Open with "{task}" and build momentum.', '{ntasks} today. First up: "{task}". Let\'s move.'],
+      progress: ['{done} done, {left} left. Keep the pace, {name}. Next: "{task}".', 'Solid start. Don\'t coast now, "{task}" is waiting.'],
+      allDone: ['That\'s a full session, {name}! Every task done. Same time tomorrow.', 'Clean sweep today. This is what progress looks like.'],
+      missed: ['We lost a day yesterday. No drama, we get it back now. Start with "{task}".'],
+      streak: ['{streak}-day streak! You\'re on fire, {name}. Protect it today.']
+    },
+    drill: {
+      name: 'Drill Sergeant',
+      desc: 'Tough love, no excuses',
+      noGoals: ['No goal, no plan, no progress. Set a goal now, {name}.'],
+      start: ['{ntasks}. Zero done. Get moving on "{task}", {name}. Now.', 'Your goal does not care how you feel. "{task}". Go.'],
+      progress: ['{done} done is not {total}. Finish "{task}" before you do anything else.', 'Halfway is not done, {name}. {left} left.'],
+      allDone: ['All done. Acceptable. Be back tomorrow, same standard.', 'Mission complete for today. Don\'t let it go to your head.'],
+      missed: ['You skipped yesterday. Excuses don\'t build futures. "{task}", right now.'],
+      streak: ['{streak} days straight. Good. Break it and you start from zero, {name}.']
+    }
+  };
+
+  function buddySituation() {
+    const tt = todayTasks();
+    const done = tt.filter((t) => t.done).length;
+    const s = streak();
+    const yesterday = addDays(today(), -1);
+    const hadYesterday = state.tasks.some((t) => t.date === yesterday);
+    const didYesterday = doneDates().has(yesterday);
+    let key;
+    if (!state.goals.length) key = 'noGoals';
+    else if (tt.length && done === tt.length) key = 'allDone';
+    else if (done > 0) key = 'progress';
+    else if (hadYesterday && !didYesterday && s === 0) key = 'missed';
+    else if (s >= 3) key = 'streak';
+    else key = 'start';
+    return { key, tt, done, s };
+  }
+
+  function buddyMessage() {
+    const style = BUDDY[state.profile?.buddyStyle || 'coach'];
+    const { key, tt, done, s } = buddySituation();
+    const cached = state.checkins[today()];
+    if (cached && cached.key === key && cached.source === 'gemini') return { text: cached.text, source: 'gemini' };
+    const list = style[key];
+    const seed = parseInt(today().replace(/-/g, ''), 10) + ui.variant;
+    const next = tt.find((t) => !t.done);
+    const text = list[seed % list.length]
+      .replaceAll('{name}', state.profile?.name || 'friend')
+      .replaceAll('{ntasks}', `${tt.length} task${tt.length === 1 ? '' : 's'}`)
+      .replaceAll('{done}', String(done))
+      .replaceAll('{left}', String(tt.length - done))
+      .replaceAll('{total}', String(tt.length))
+      .replaceAll('{streak}', String(s))
+      .replaceAll('{task}', next ? next.title : 'your first task');
+    return { text, source: 'template' };
+  }
+
+  let checkinPending = false;
+  async function maybeGeminiCheckIn(force = false) {
+    const p = state.profile;
+    if (!p?.apiKey || checkinPending || !state.goals.length) return;
+    const { key, tt, done, s } = buddySituation();
+    const cached = state.checkins[today()];
+    if (!force && cached && cached.key === key) return;
+    checkinPending = true;
+    const style = BUDDY[p.buddyStyle || 'coach'];
+    const context = `You are ${p.name}'s accountability buddy. Personality: ${style.name} (${style.desc}).
+Write ONE short check-in message (max 2 sentences, no emoji, no quotes) for today.
+Goals: ${state.goals.map((g) => `"${g.title}" (due ${g.deadline}, why: ${g.why || 'n/a'})`).join('; ')}.
+Today's tasks: ${tt.map((t) => `${t.done ? '[done]' : '[todo]'} ${t.title}`).join('; ') || 'none'}.
+Done today: ${done}/${tt.length}. Current streak: ${s} days. Situation: ${key}.`;
+    try {
+      const text = await Planner.checkInWithGemini(context, p.apiKey, p.model || DEFAULT_MODEL);
+      state.checkins[today()] = { text, key, source: 'gemini' };
+      save();
+      if (ui.view === 'today') render();
+    } catch { /* keep the template message */ }
+    checkinPending = false;
+  }
+
+  // ---------- Reminders ----------
+  function reminderDue() {
+    const p = state.profile;
+    if (!p?.remindersOn) return false;
+    const now = new Date();
+    const hhmm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    return hhmm >= p.reminderTime && todayTasks().some((t) => !t.done);
+  }
+  function reminderTick() {
+    if (!reminderDue() || state.notified[today()]) return;
+    state.notified[today()] = true;
+    save();
+    const left = todayTasks().filter((t) => !t.done);
+    const body = `${left.length} task${left.length === 1 ? '' : 's'} left today. Next: ${left[0].title}`;
+    try {
+      if ('Notification' in window && Notification.permission === 'granted') new Notification('Momentum check-in', { body });
+    } catch { /* notifications unavailable */ }
+    toast(`Check-in time. ${body}`);
+    render();
+  }
+  setInterval(reminderTick, 30000);
+
+  // ---------- Calendar + data export ----------
+  function icsText() {
+    const p = state.profile;
+    const [h, m] = (p.reminderTime || '19:00').split(':');
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+    const escIcs = (s) => String(s).replace(/\\/g, '\\\\').replace(/[,;]/g, (c) => `\\${c}`).replace(/\n/g, '\\n');
+    const end = addDays(today(), 60);
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Momentum//Accountability Buddy//EN', 'CALSCALE:GREGORIAN'];
+    state.tasks.filter((t) => !t.done && t.date >= today() && t.date <= end).forEach((t) => {
+      const g = goalById(t.goalId);
+      lines.push('BEGIN:VEVENT', `UID:${t.id}@momentum`, `DTSTAMP:${stamp}`,
+        `DTSTART:${t.date.replace(/-/g, '')}T${h}${m}00`, `DURATION:PT${t.minutes}M`,
+        `SUMMARY:${escIcs(t.title)}`, `DESCRIPTION:${escIcs(`Goal: ${g ? g.title : ''}`)}`,
+        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Momentum reminder', 'TRIGGER:-PT10M', 'END:VALARM', 'END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+    return lines.join('\r\n');
+  }
+  function download(name, text, type) {
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type }));
+      const a = document.createElement('a');
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    } catch { /* some embedded viewers block downloads; the copy box covers that */ }
+  }
+
+  // ---------- Demo data ----------
+  function loadDemo() {
+    state = blank();
+    state.profile = { name: 'Alex', hoursPerWeek: 7, reminderTime: '19:00', buddyStyle: 'coach', apiKey: '', model: DEFAULT_MODEL, remindersOn: false };
+    const start = addDays(today(), -10);
+    const goals = [
+      { title: 'Land a software engineering internship for summer 2027', why: 'I want real industry experience before graduating', level: 'beginner', deadline: addDays(today(), 110) },
+      { title: 'Run my first 10K race', why: 'Get fit and prove I can stick to something', level: 'beginner', deadline: addDays(today(), 60) }
+    ];
+    goals.forEach((gd, i) => {
+      const g = { id: uid(), ...gd, createdAt: start, color: GOAL_COLORS[i], source: 'offline', demo: true };
+      state.goals.push(g);
+      materialise(g, Planner.planOffline(g, { hoursPerWeek: i === 0 ? 5 : 3 }, start), start);
+    });
+    // Simulate a good week and a half: most past tasks done, one missed
+    state.tasks.forEach((t) => {
+      if (t.date < today() && t.date !== addDays(today(), -6)) { t.done = true; t.doneAt = t.date; }
+    });
+    save();
+    ui.view = 'today';
+    toast('Demo loaded with example goals. Reset it in Settings.');
+  }
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function toast(msg) {
+    ui.toast = msg;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { ui.toast = null; render(); }, 3200);
+    render();
+  }
+
+  // ---------- Icons ----------
+  const I = {
+    today: '<svg viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>',
+    plan: '<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/></svg>',
+    progress: '<svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    settings: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
+    add: '<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+    check: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    edit: '<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>',
+    trash: '<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+    later: '<svg viewBox="0 0 24 24"><path d="M5 12h12M13 6l6 6-6 6"/></svg>',
+    flame: '<svg viewBox="0 0 24 24"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-6 1-9.5z"/></svg>',
+    mark: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>',
+    face: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="13" r="1.6" fill="currentColor" stroke="none"/><circle cx="21" cy="13" r="1.6" fill="currentColor" stroke="none"/><path d="M10 19c1.6 2.4 3.6 3.5 6 3.5s4.4-1.1 6-3.5"/></svg>'
+  };
+
+  // ---------- Views ----------
+  function topbar() {
+    const s = streak();
+    return `<header class="topbar">
+      <div class="brand"><span class="brand-mark">${I.mark}</span>Momentum</div>
+      ${state.profile ? `<span class="streak-pill" title="Days in a row with at least one task done">${I.flame}<span class="num">${s}</span> day streak</span>` : ''}
+    </header>`;
+  }
+
+  function tabs() {
+    const t = [['today', 'Today'], ['plan', 'Plan'], ['progress', 'Progress'], ['settings', 'Settings']];
+    return `<nav class="tabs" aria-label="Main">${t.map(([k, label]) => `<button data-action="nav" data-view="${k}" ${ui.view === k ? 'aria-current="page"' : ''}>${I[k]}${label}</button>`).join('')}</nav>`;
+  }
+
+  function taskRow(t, { showDate = false, editable = false } = {}) {
+    const g = goalById(t.goalId);
+    const overdue = !t.done && t.date < today();
+    if (ui.editing === t.id) {
+      return `<li class="task"><div class="task-body"><input class="edit-input" id="edit-${t.id}" data-edit="${t.id}" value="${esc(t.title)}" aria-label="Task title"></div>
+        <input type="date" class="edit-input" style="width:auto" data-edit-date="${t.id}" value="${t.date}" aria-label="Task date">
+        <button class="btn primary" data-action="save-edit" data-id="${t.id}">Save</button></li>`;
+    }
+    return `<li class="task ${t.done ? 'done' : ''}">
+      <button class="check" data-action="toggle" data-id="${t.id}" aria-label="${t.done ? 'Mark not done' : 'Mark done'}: ${esc(t.title)}" aria-pressed="${t.done}">${I.check}</button>
+      <div class="task-body">
+        <span class="task-title">${esc(t.title)}</span>
+        <span class="task-meta">
+          ${g && !editable ? `<span class="goal-name"><span class="dot" style="background:${g.color}"></span>${esc(g.title.length > 34 ? g.title.slice(0, 32) + '…' : g.title)}</span>` : ''}
+          <span class="num">${t.minutes} min</span>
+          ${showDate || overdue ? `<span>${fmtDate(t.date)}</span>` : ''}
+          ${overdue ? '<span class="tag overdue">Overdue</span>' : ''}
+        </span>
+      </div>
+      ${!t.done && !editable ? `<button class="icon-btn" data-action="later" data-id="${t.id}" title="Move to tomorrow" aria-label="Move to tomorrow">${I.later}</button>` : ''}
+      ${editable ? `<button class="icon-btn" data-action="edit" data-id="${t.id}" aria-label="Edit task">${I.edit}</button>
+      <button class="icon-btn" data-action="delete-task" data-id="${t.id}" aria-label="Delete task">${I.trash}</button>` : ''}
+    </li>`;
+  }
+
+  function viewWelcome() {
+    return `<section class="welcome card" style="gap:18px">
+      <p class="eyebrow">Your AI accountability buddy</p>
+      <h1>Big ambitions, broken down to what you do today.</h1>
+      <p class="lede">Tell Momentum what you're aiming for. It builds the plan, puts today's tasks in front of you, and checks in every day like a gym partner who won't let you skip.</p>
+      <div class="ladder" aria-label="How a goal is broken down"><span>Big goal</span><i>→</i><span>Phases</span><i>→</i><span>Weekly milestones</span><i>→</i><span>Today's tasks</span></div>
+    </section>
+    <section class="card">
+      <h2>Set up your buddy</h2>
+      <form data-form="profile">
+        <div class="grid-2">
+          <label>Your name<input type="text" id="p-name" name="name" required maxlength="40" value="${esc(state.profile?.name || '')}" placeholder="e.g. Sherbaz" autocomplete="given-name"></label>
+          <label>Hours per week you can give<input type="number" id="p-hours" name="hoursPerWeek" min="1" max="60" value="${state.profile?.hoursPerWeek || 6}" required><span class="hint">Be honest. The plan fits inside this.</span></label>
+        </div>
+        <label>Daily check-in time<input type="time" id="p-time" name="reminderTime" value="${state.profile?.reminderTime || '19:00'}" required></label>
+        ${buddyPicker(state.profile?.buddyStyle || 'coach')}
+        ${ui.error ? `<p class="error">${esc(ui.error)}</p>` : ''}
+        <button class="btn primary block" type="submit">Continue</button>
+      </form>
+    </section>
+    <section class="card"><div class="row"><p class="grow muted small">Presenting or just curious? Load two example goals with 10 days of history.</p><button class="btn" data-action="demo">Load demo</button></div></section>`;
+  }
+
+  function buddyPicker(current) {
+    return `<fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:6px"><legend style="font-weight:700;font-size:.92rem;margin-bottom:6px">Buddy personality</legend>
+      <div class="seg">${Object.entries(BUDDY).map(([k, b]) => `<label><input type="radio" name="buddyStyle" id="bs-${k}" value="${k}" ${current === k ? 'checked' : ''}><b>${b.name}</b><span class="hint">${b.desc}</span></label>`).join('')}</div></fieldset>`;
+  }
+
+  function viewNewGoal() {
+    const examples = ['Land a software internship by summer', 'Get a 3.7 GPA this semester', 'Run a 10K', 'Launch my first app', 'Speak conversational Spanish'];
+    return `<section class="card">
+      <div class="card-head"><h2>${state.goals.length ? 'Add another goal' : `What are you aiming for, ${esc(state.profile.name)}?`}</h2>
+      ${state.goals.length ? '<button class="btn" data-action="nav" data-view="plan">Cancel</button>' : ''}</div>
+      <div class="row">${examples.map((e) => `<button class="chip" type="button" data-action="example" data-text="${esc(e)}">${esc(e)}</button>`).join('')}</div>
+      <form data-form="goal">
+        <label>Your big goal<input type="text" id="g-title" name="title" maxlength="120" required placeholder="e.g. Land a software engineering internship"></label>
+        <label>Why does it matter to you?<textarea id="g-why" name="why" maxlength="300" placeholder="Your buddy uses this to keep you going on hard days"></textarea></label>
+        <div class="grid-2">
+          <label>Deadline<input type="date" id="g-deadline" name="deadline" required min="${addDays(today(), 7)}" value="${addDays(today(), 84)}"></label>
+          <label>Where are you starting?<select id="g-level" name="level"><option value="beginner">Beginner, starting from zero</option><option value="intermediate">Some experience</option><option value="advanced">Advanced, need to level up</option></select></label>
+        </div>
+        ${ui.error ? `<p class="error">${esc(ui.error)}</p>` : ''}
+        <button class="btn primary block" type="submit">Build my plan</button>
+        <p class="muted small">${state.profile.apiKey ? 'Your plan is built with Google Gemini.' : 'No Gemini key set, so the built-in planner will be used. Add a key in Settings for an AI-written plan.'}</p>
+      </form>
+    </section>`;
+  }
+
+  function viewToday() {
+    const tt = todayTasks();
+    const done = tt.filter((t) => t.done).length;
+    const mins = tt.filter((t) => !t.done).reduce((a, t) => a + t.minutes, 0);
+    const msg = buddyMessage();
+    const nudge = reminderDue();
+    return `<section class="card buddy" aria-live="polite">
+      <div class="buddy-row"><span class="buddy-face">${I.face}</span>
+        <div style="display:flex;flex-direction:column;gap:6px"><p class="eyebrow">${BUDDY[state.profile.buddyStyle].name} · ${fmtDate(today(), { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+        <p class="buddy-msg">${esc(msg.text)}</p></div></div>
+      <div class="buddy-actions"><button class="btn" data-action="new-msg">Another check-in</button></div>
+    </section>
+    ${nudge ? `<div class="notice">It's past your ${fmtTime(state.profile.reminderTime)} check-in. ${tt.length - done} task${tt.length - done === 1 ? '' : 's'} still open.</div>` : ''}
+    <div class="stats">
+      <div class="stat"><b>${done}/${tt.length}</b><span>done today</span></div>
+      <div class="stat"><b>${mins}</b><span>minutes left</span></div>
+      <div class="stat"><b>${streak()}</b><span>day streak</span></div>
+    </div>
+    <section class="card">
+      <div class="card-head"><h2>Today</h2><span class="muted small">${fmtDate(today())}</span></div>
+      ${tt.length ? `<ul class="task-list">${tt.map((t) => taskRow(t)).join('')}</ul>` : `<div class="empty"><p>No tasks scheduled today. Rest day, or add one below.</p></div>`}
+      <form data-form="quick" class="row" style="flex-direction:row">
+        <input type="text" id="q-title" name="title" class="grow" placeholder="Add a task for today" aria-label="New task" maxlength="140" required>
+        ${state.goals.length > 1 ? `<select id="q-goal" name="goalId" aria-label="Goal" style="width:auto">${state.goals.map((g) => `<option value="${g.id}">${esc(g.title.slice(0, 24))}</option>`).join('')}</select>` : ''}
+        <button class="btn" type="submit">Add</button>
+      </form>
+    </section>
+    ${upNext()}`;
+  }
+
+  function upNext() {
+    const t = today();
+    const next = state.tasks.filter((x) => x.date > t && x.date <= addDays(t, 3) && !x.done).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 5);
+    if (!next.length) return '';
+    return `<section class="card"><h3>Coming up</h3><ul class="task-list">${next.map((x) => taskRow(x, { showDate: true })).join('')}</ul></section>`;
+  }
+
+  function viewPlan() {
+    if (!state.goals.length) return viewNewGoal();
+    if (!goalById(ui.planGoal)) ui.planGoal = state.goals[0].id;
+    const g = goalById(ui.planGoal);
+    const st = goalStats(g);
+    const t = today();
+    const overdue = state.tasks.filter((x) => x.goalId === g.id && !x.done && x.date < t).length;
+    const confirming = ui.confirm === `goal:${g.id}`;
+    return `<div class="goal-switch" role="group" aria-label="Goals">
+      ${state.goals.map((x) => `<button class="chip" data-action="pick-goal" data-id="${x.id}" aria-pressed="${x.id === g.id}"><span class="dot" style="background:${x.color}"></span>${esc(x.title.length > 30 ? x.title.slice(0, 28) + '…' : x.title)}</button>`).join('')}
+      <button class="chip" data-action="nav" data-view="newgoal">+ New goal</button>
+    </div>
+    <section class="card" style="--pc:${g.color}">
+      <div class="card-head"><h2>${esc(g.title)}</h2><span class="tag ${g.source === 'gemini' ? 'ai' : 'offline'}">${g.source === 'gemini' ? 'Planned by Gemini' : 'Built-in planner'}${g.demo ? ' · demo' : ''}</span></div>
+      ${g.why ? `<p class="muted">Why: ${esc(g.why)}</p>` : ''}
+      <div class="row small"><span>Deadline <b>${fmtDate(g.deadline, { day: 'numeric', month: 'short', year: 'numeric' })}</b></span><span class="muted">·</span><span class="num">${daysLeft(g.deadline)} days left</span><span class="muted">·</span><span class="num">${st.done}/${st.total} tasks</span></div>
+      <div class="bar" role="progressbar" aria-valuenow="${st.pct}" aria-valuemin="0" aria-valuemax="100" aria-label="Goal progress"><i style="width:${st.pct}%"></i></div>
+      <div class="row">
+        ${overdue ? `<button class="btn primary" data-action="replan" data-id="${g.id}">Reschedule ${overdue} missed task${overdue === 1 ? '' : 's'}</button>` : ''}
+        <button class="btn" data-action="rebuild" data-id="${g.id}">Rebuild plan</button>
+        ${confirming ? `<span class="small">Delete this goal and its tasks?</span><button class="btn danger" data-action="delete-goal" data-id="${g.id}">Delete</button><button class="btn" data-action="cancel-confirm">Keep</button>`
+          : `<button class="btn danger" data-action="confirm" data-key="goal:${g.id}">Delete goal</button>`}
+      </div>
+    </section>
+    ${g.phases.map((p) => `<section class="card phase" style="--pc:${g.color}">
+        <div class="phase-head"><p class="eyebrow">${fmtDate(p.start, { day: 'numeric', month: 'short' })} – ${fmtDate(p.end, { day: 'numeric', month: 'short' })}</p><h3>${esc(p.title)}</h3>${p.summary ? `<p class="muted small">${esc(p.summary)}</p>` : ''}</div>
+        ${p.weeks.map((w) => {
+          const wt = state.tasks.filter((x) => x.goalId === g.id && x.weekIdx === w.idx).sort((a, b) => a.date.localeCompare(b.date));
+          const wd = wt.filter((x) => x.done).length;
+          const current = t >= w.start && t <= addDays(w.start, 6);
+          return `<details class="week ${current ? 'current' : ''}" ${current ? 'open' : ''}>
+            <summary><span><b>${esc(w.title)}</b>${current ? ' <span class="tag ai">This week</span>' : ''}</span><span class="wk">W${w.idx + 1} · ${wd}/${wt.length}</span></summary>
+            <ul class="task-list">${wt.map((x) => taskRow(x, { showDate: true, editable: true })).join('') || '<li class="task muted small">No tasks this week.</li>'}</ul>
+          </details>`;
+        }).join('')}
+      </section>`).join('')}`;
+  }
+
+  function viewProgress() {
+    const t = today();
+    const days = Array.from({ length: 7 }, (_, i) => addDays(t, i - 6));
+    const counts = days.map((d) => state.tasks.filter((x) => x.done && x.doneAt === d).length);
+    const max = Math.max(1, ...counts);
+    const all = state.tasks.filter((x) => x.date <= t);
+    const allDone = all.filter((x) => x.done).length;
+    return `<div class="stats">
+      <div class="stat"><b>${streak()}</b><span>current streak</span></div>
+      <div class="stat"><b>${bestStreak()}</b><span>best streak</span></div>
+      <div class="stat"><b>${all.length ? Math.round((allDone / all.length) * 100) : 0}%</b><span>due tasks done</span></div>
+    </div>
+    <section class="card">
+      <div class="card-head"><h2>Last 7 days</h2><span class="muted small">tasks completed per day</span></div>
+      <div class="week-chart" role="img" aria-label="Tasks completed in the last 7 days: ${counts.join(', ')}">
+        ${days.map((d, i) => `<div class="col ${d === t ? 'today' : ''}"><span class="v">${counts[i]}</span><div class="b ${counts[i] ? '' : 'zero'}" style="height:${(counts[i] / max) * 100}%"></div><span class="d">${fmtDate(d, { weekday: 'short' })}</span></div>`).join('')}
+      </div>
+    </section>
+    <section class="card"><h2>Goals</h2>
+      ${state.goals.length ? state.goals.map((g) => { const s = goalStats(g); return `<div style="--pc:${g.color};display:flex;flex-direction:column;gap:6px">
+        <div class="card-head"><b>${esc(g.title)}</b><span class="tag ${s.onTrack ? '' : 'overdue'}" style="${s.onTrack ? 'background:var(--good-soft);color:var(--good)' : ''}">${s.onTrack ? 'On track' : 'Falling behind'}</span></div>
+        <div class="bar"><i style="width:${s.pct}%"></i></div>
+        <span class="small muted"><span class="num">${s.done}/${s.total}</span> tasks · <span class="num">${s.doneDue}/${s.due}</span> of tasks due so far · <span class="num">${daysLeft(g.deadline)}</span> days left</span></div>`; }).join('') : '<p class="muted">No goals yet.</p>'}
+    </section>`;
+  }
+
+  function viewSettings() {
+    const p = state.profile;
+    const perm = 'Notification' in window ? Notification.permission : 'unsupported';
+    const confirming = ui.confirm === 'reset';
+    return `<section class="card"><h2>Profile & buddy</h2>
+      <form data-form="profile-edit">
+        <div class="grid-2">
+          <label>Name<input type="text" id="s-name" name="name" required maxlength="40" value="${esc(p.name)}"></label>
+          <label>Hours per week<input type="number" id="s-hours" name="hoursPerWeek" min="1" max="60" value="${p.hoursPerWeek}" required><span class="hint">Used for new or rebuilt plans</span></label>
+        </div>
+        ${buddyPicker(p.buddyStyle)}
+        <button class="btn primary" type="submit">Save profile</button>
+      </form>
+    </section>
+    <section class="card"><h2>AI planner (Google Gemini)</h2>
+      <p class="muted small">Get a free API key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a>. The key is stored only in this browser and sent only to Google.</p>
+      <form data-form="ai">
+        <label>API key<input type="password" id="s-key" name="apiKey" value="${esc(p.apiKey || '')}" placeholder="AIza…" autocomplete="off"></label>
+        <label>Model<input type="text" id="s-model" name="model" value="${esc(p.model || DEFAULT_MODEL)}"><span class="hint">Default: ${DEFAULT_MODEL}</span></label>
+        <div class="row"><button class="btn primary" type="submit">Save key</button><button class="btn" type="button" data-action="test-key">Test key</button></div>
+      </form>
+    </section>
+    <section class="card"><h2>Reminders</h2>
+      <form data-form="reminders">
+        <label>Daily check-in time<input type="time" id="s-time" name="reminderTime" value="${p.reminderTime}"></label>
+        <div class="row"><button class="btn primary" type="submit">${p.remindersOn ? 'Save time' : 'Turn on reminders'}</button>
+        ${p.remindersOn ? '<button class="btn" type="button" data-action="reminders-off">Turn off</button>' : ''}</div>
+        <p class="muted small">Status: ${p.remindersOn ? `on at ${fmtTime(p.reminderTime)}` : 'off'} · browser notifications ${perm === 'granted' ? 'allowed' : perm === 'denied' ? 'blocked (in-app reminders still work)' : perm === 'unsupported' ? 'not supported here' : 'not yet allowed'}. Reminders fire while Momentum is open; add tasks to your calendar to get them anywhere.</p>
+      </form>
+      <div class="row"><button class="btn" data-action="ics">Add next 60 days to calendar (.ics)</button></div>
+    </section>
+    ${ui.exportPanel ? `<section class="card"><div class="card-head"><h3>${esc(ui.exportPanel.title)}</h3><button class="btn" data-action="close-export">Close</button></div>
+      <p class="muted small">If the download didn't start, copy this text into a file named <span class="num">${esc(ui.exportPanel.name)}</span>.</p>
+      <textarea class="code" id="export-text" readonly>${esc(ui.exportPanel.text)}</textarea>
+      <div class="row"><button class="btn primary" data-action="copy-export">Copy</button></div></section>` : ''}
+    <section class="card"><h2>Your data</h2>
+      <p class="muted small">Everything is saved on this device only. Export a backup to move it to another browser.</p>
+      <div class="row">
+        <button class="btn" data-action="export-json">Export backup</button>
+        <label class="btn" style="flex-direction:row;font-weight:700">Import backup<input type="file" id="import-file" accept="application/json,.json" data-action="import" hidden></label>
+        ${confirming ? `<span class="small">Erase all goals, tasks and settings?</span><button class="btn danger" data-action="reset">Erase</button><button class="btn" data-action="cancel-confirm">Keep</button>`
+          : '<button class="btn danger" data-action="confirm" data-key="reset">Reset everything</button>'}
+      </div>
+    </section>`;
+  }
+
+  // ---------- Render ----------
+  const root = document.getElementById('app');
+  function render() {
+    let body;
+    if (!state.profile) ui.view = 'welcome';
+    switch (ui.view) {
+      case 'welcome': body = viewWelcome(); break;
+      case 'newgoal': body = viewNewGoal(); break;
+      case 'plan': body = viewPlan(); break;
+      case 'progress': body = viewProgress(); break;
+      case 'settings': body = viewSettings(); break;
+      default: ui.view = 'today'; body = state.goals.length ? viewToday() : viewNewGoal();
+    }
+    root.innerHTML = `<div class="app">${topbar()}${body}</div>
+      ${state.profile && state.goals.length ? tabs() : ''}
+      ${ui.busy ? `<div class="overlay" role="alertdialog" aria-live="assertive"><div class="card"><div class="spinner"></div><h3>${esc(ui.busy)}</h3><p class="muted small">Breaking your goal into phases, weekly milestones and daily tasks.</p></div></div>` : ''}
+      ${ui.toast ? `<div class="toast" role="status">${esc(ui.toast)}</div>` : ''}`;
+    if (ui.editing) { const el = document.getElementById(`edit-${ui.editing}`); if (el) { el.focus(); el.select(); } }
+    if (ui.view === 'today') maybeGeminiCheckIn();
+  }
+
+  function go(view) { ui.view = view; ui.error = null; ui.confirm = null; ui.editing = null; render(); window.scrollTo(0, 0); }
+
+  // ---------- Events ----------
+  root.addEventListener('click', async (e) => {
+    const el = e.target.closest('[data-action]');
+    if (!el || el.tagName === 'INPUT') return;
+    const { action, id } = el.dataset;
+    const task = id && state.tasks.find((t) => t.id === id);
+    switch (action) {
+      case 'nav': go(el.dataset.view); break;
+      case 'demo': loadDemo(); render(); break;
+      case 'example': { const input = document.getElementById('g-title'); input.value = el.dataset.text; input.focus(); break; }
+      case 'toggle':
+        task.done = !task.done; task.doneAt = task.done ? today() : null; save();
+        if (task.done) {
+          const left = todayTasks().filter((t) => !t.done).length;
+          if (ui.view === 'today' && left === 0) toast('All done for today. Streak protected.');
+        }
+        render(); break;
+      case 'later': task.date = addDays(today(), 1); save(); toast('Moved to tomorrow'); break;
+      case 'edit': ui.editing = id; render(); break;
+      case 'save-edit': saveEdit(id); break;
+      case 'delete-task': state.tasks = state.tasks.filter((t) => t.id !== id); save(); render(); break;
+      case 'pick-goal': ui.planGoal = id; ui.confirm = null; render(); break;
+      case 'confirm': ui.confirm = el.dataset.key; render(); break;
+      case 'cancel-confirm': ui.confirm = null; render(); break;
+      case 'delete-goal':
+        state.goals = state.goals.filter((g) => g.id !== id);
+        state.tasks = state.tasks.filter((t) => t.goalId !== id);
+        ui.confirm = null; ui.planGoal = null; save();
+        toast('Goal deleted'); if (!state.goals.length) go('newgoal'); break;
+      case 'replan': {
+        const t = today();
+        const missed = state.tasks.filter((x) => x.goalId === id && !x.done && x.date < t).sort((a, b) => a.date.localeCompare(b.date));
+        missed.forEach((x, i) => { x.date = addDays(t, Math.floor(i / 2)); });
+        save(); toast(`${missed.length} task${missed.length === 1 ? '' : 's'} rescheduled from today`); break;
+      }
+      case 'rebuild': {
+        const g = goalById(id);
+        ui.busy = 'Rebuilding your plan'; render();
+        const kept = state.tasks.filter((x) => x.goalId === id && x.done);
+        const warn = await buildPlan(g, today());
+        // keep completed history: past done tasks stay, attached to week -1
+        kept.forEach((x) => { x.weekIdx = -1; });
+        state.tasks = state.tasks.concat(kept);
+        ui.busy = null; save();
+        toast(warn || 'Plan rebuilt from today'); break;
+      }
+      case 'new-msg':
+        ui.variant++;
+        if (state.profile.apiKey) { delete state.checkins[today()]; maybeGeminiCheckIn(true); }
+        render(); break;
+      case 'test-key': testKey(); break;
+      case 'reminders-off': state.profile.remindersOn = false; save(); toast('Reminders off'); break;
+      case 'ics': {
+        const text = icsText();
+        download('momentum-tasks.ics', text, 'text/calendar');
+        ui.exportPanel = { title: 'Calendar file', name: 'momentum-tasks.ics', text }; render(); break;
+      }
+      case 'export-json': {
+        const text = JSON.stringify({ ...state, profile: { ...state.profile, apiKey: '' } }, null, 2);
+        download('momentum-backup.json', text, 'application/json');
+        ui.exportPanel = { title: 'Backup (API key removed)', name: 'momentum-backup.json', text }; render(); break;
+      }
+      case 'close-export': ui.exportPanel = null; render(); break;
+      case 'copy-export': {
+        const ta = document.getElementById('export-text');
+        try { await navigator.clipboard.writeText(ta.value); toast('Copied'); } catch { ta.focus(); ta.select(); toast('Press Ctrl/Cmd + C to copy'); }
+        break;
+      }
+      case 'reset': state = blank(); ui.confirm = null; try { localStorage.removeItem(STORE_KEY); } catch {} go('welcome'); break;
+    }
+  });
+
+  root.addEventListener('keydown', (e) => {
+    if (e.target.matches('[data-edit]')) {
+      if (e.key === 'Enter') { e.preventDefault(); saveEdit(e.target.dataset.edit); }
+      if (e.key === 'Escape') { ui.editing = null; render(); }
+    }
+  });
+
+  root.addEventListener('change', (e) => {
+    if (e.target.id !== 'import-file' || !e.target.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (!data.profile || !Array.isArray(data.goals) || !Array.isArray(data.tasks)) throw new Error('bad');
+        const key = state.profile?.apiKey || '';
+        state = { ...blank(), ...data };
+        if (!state.profile.apiKey) state.profile.apiKey = key;
+        save(); toast('Backup imported'); go('today');
+      } catch { toast("That file isn't a Momentum backup."); }
+    };
+    reader.readAsText(e.target.files[0]);
+  });
+
+  function saveEdit(id) {
+    const t = state.tasks.find((x) => x.id === id);
+    const title = document.getElementById(`edit-${id}`)?.value.trim();
+    const date = document.querySelector(`[data-edit-date="${id}"]`)?.value;
+    if (title) t.title = title;
+    if (date) t.date = date;
+    ui.editing = null; save(); render();
+  }
+
+  async function testKey() {
+    const key = document.getElementById('s-key').value.trim();
+    const model = document.getElementById('s-model').value.trim() || DEFAULT_MODEL;
+    if (!key) { toast('Paste an API key first'); return; }
+    toast('Testing key…');
+    try {
+      await Planner.checkInWithGemini('Reply with the single word: ready', key, model);
+      toast('Key works. Gemini is connected.');
+    } catch (e) { toast(`Key test failed: ${e.message}`); }
+  }
+
+  root.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const f = Object.fromEntries(new FormData(form).entries());
+    ui.error = null;
+    switch (form.dataset.form) {
+      case 'profile': {
+        const hours = Number(f.hoursPerWeek);
+        if (!f.name.trim()) { ui.error = 'Add your name so your buddy knows who to talk to.'; render(); return; }
+        if (!(hours >= 1 && hours <= 60)) { ui.error = 'Hours per week must be between 1 and 60.'; render(); return; }
+        state.profile = { name: f.name.trim(), hoursPerWeek: hours, reminderTime: f.reminderTime || '19:00', buddyStyle: f.buddyStyle || 'coach', apiKey: '', model: DEFAULT_MODEL, remindersOn: false };
+        save(); go('newgoal'); break;
+      }
+      case 'profile-edit':
+        Object.assign(state.profile, { name: f.name.trim() || state.profile.name, hoursPerWeek: Math.min(60, Math.max(1, Number(f.hoursPerWeek) || 5)), buddyStyle: f.buddyStyle });
+        delete state.checkins[today()]; save(); toast('Profile saved'); break;
+      case 'ai':
+        state.profile.apiKey = f.apiKey.trim(); state.profile.model = f.model.trim() || DEFAULT_MODEL;
+        delete state.checkins[today()]; save(); toast(state.profile.apiKey ? 'Key saved. New plans use Gemini.' : 'Key removed. Using the built-in planner.'); break;
+      case 'reminders': {
+        state.profile.reminderTime = f.reminderTime || '19:00';
+        state.profile.remindersOn = true;
+        delete state.notified[today()];
+        try { if ('Notification' in window && Notification.permission === 'default') await Notification.requestPermission(); } catch { /* refused */ }
+        save(); toast(`Reminders on at ${fmtTime(state.profile.reminderTime)}`); break;
+      }
+      case 'goal': {
+        const title = f.title.trim();
+        if (!title) { ui.error = 'Describe your goal in a few words.'; render(); return; }
+        if (!f.deadline || f.deadline < addDays(today(), 7)) { ui.error = 'Pick a deadline at least one week from today.'; render(); return; }
+        const g = { id: uid(), title, why: f.why.trim(), level: f.level, deadline: f.deadline, createdAt: today(), color: GOAL_COLORS[state.goals.length % GOAL_COLORS.length], source: 'offline' };
+        ui.busy = state.profile.apiKey ? 'Gemini is building your plan' : 'Building your plan';
+        render();
+        const warn = await buildPlan(g, today());
+        state.goals.push(g);
+        ui.busy = null; ui.planGoal = g.id; save();
+        ui.view = 'plan'; render();
+        toast(warn || `Plan ready: ${g.phases.length} phases, ${g.phases.reduce((a, p) => a + p.weeks.length, 0)} weeks`);
+        break;
+      }
+      case 'quick': {
+        const goalId = f.goalId || state.goals[0].id;
+        state.tasks.push({ id: uid(), goalId, phaseId: null, weekIdx: -1, date: today(), title: f.title.trim(), minutes: 30, done: false, doneAt: null });
+        save(); render(); document.getElementById('q-title')?.focus(); break;
+      }
+    }
+  });
+
+  render();
+  reminderTick();
+})();
+
+</script>

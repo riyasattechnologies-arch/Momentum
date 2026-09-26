@@ -1,0 +1,153 @@
+<title>Momentum Wireframes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root {
+  --paper: #F4F4F1; --frame: #FFFFFF; --ink: #2B2E2C; --pencil: #8C918D; --fill: #E4E6E2; --fill-2: #D2D5D0; --note: #2743C9;
+  --hand: "Kalam", "Comic Sans MS", cursive; --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; --paper: #121513; --frame: #1B1F1D; --ink: #E3E6E4; --pencil: #8E9691; --fill: #2A2F2C; --fill-2: #363C38; --note: #8FA3FF; }
+}
+:root[data-theme="dark"] { color-scheme: dark; --paper: #121513; --frame: #1B1F1D; --ink: #E3E6E4; --pencil: #8E9691; --fill: #2A2F2C; --fill-2: #363C38; --note: #8FA3FF; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--body); padding-inline: 16px; padding-block: 28px 48px; }
+header { max-width: 1100px; margin: 0 auto 24px; display: flex; flex-direction: column; gap: 6px; }
+h1 { font-family: var(--hand); font-size: 2.2rem; margin: 0; line-height: 1.1; }
+header p { margin: 0; color: var(--pencil); max-width: 62ch; }
+.board { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 22px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+figcaption { font-family: var(--hand); font-size: 1.15rem; display: flex; gap: 8px; align-items: baseline; }
+figcaption b { font-family: var(--body); font-size: .75rem; letter-spacing: .08em; color: var(--pencil); }
+.phone { background: var(--frame); border: 2px solid var(--ink); border-radius: 26px; padding: 14px 12px 0; height: 470px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; position: relative; }
+.phone::before { content: ""; align-self: center; width: 60px; height: 5px; border-radius: 4px; background: var(--fill-2); margin-bottom: 2px; }
+.box { border: 1.5px solid var(--ink); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.box.solid { background: var(--fill-2); border-color: var(--fill-2); }
+.box.dash { border-style: dashed; border-color: var(--pencil); }
+.line { height: 8px; background: var(--fill-2); border-radius: 4px; }
+.line.w90 { width: 90%; } .line.w70 { width: 70%; } .line.w50 { width: 50%; } .line.w30 { width: 30%; }
+.line.big { height: 14px; background: var(--ink); opacity: .75; }
+.lbl { font-family: var(--hand); font-size: .95rem; line-height: 1.2; }
+.input { border: 1.5px solid var(--pencil); border-radius: 6px; height: 26px; padding: 3px 6px; font-family: var(--hand); font-size: .85rem; color: var(--pencil); }
+.btn { border: 1.5px solid var(--ink); background: var(--ink); color: var(--frame); border-radius: 8px; text-align: center; font-family: var(--hand); font-weight: 700; padding: 4px; }
+.btn.ghost { background: none; color: var(--ink); }
+.row { display: flex; gap: 6px; align-items: center; }
+.row > * { flex: 1; }
+.cb { flex: none; width: 16px; height: 16px; border: 1.5px solid var(--ink); border-radius: 4px; }
+.cb.x { background: var(--ink); }
+.circle { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--ink); }
+.tabs { margin-top: auto; border-top: 1.5px solid var(--ink); display: flex; justify-content: space-around; padding: 8px 0 12px; font-family: var(--hand); font-size: .8rem; }
+.tabs .on { text-decoration: underline; text-decoration-thickness: 2px; }
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+.bars i { flex: 1; background: var(--fill-2); border: 1.5px solid var(--ink); border-radius: 3px 3px 0 0; }
+.note { font-family: var(--hand); color: var(--note); font-size: .95rem; line-height: 1.3; }
+.spin { width: 44px; height: 44px; border-radius: 50%; border: 4px dashed var(--ink); align-self: center; margin-top: 40px; }
+.flow { max-width: 1100px; margin: 36px auto 0; font-family: var(--hand); font-size: 1.1rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.flow span { border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 12px; background: var(--frame); }
+</style>
+
+<header>
+  <h1>Momentum · low-fi wireframes</h1>
+  <p>Seven mobile screens for the MVP. Grey blocks are content, dark blocks are primary actions, blue notes explain behaviour. Visual design is in the working app.</p>
+</header>
+
+<main class="board">
+  <figure>
+    <figcaption><b>01</b> Welcome + setup</figcaption>
+    <div class="phone">
+      <div class="line big w90"></div><div class="line big w70"></div>
+      <div class="line w90"></div><div class="line w70"></div>
+      <div class="row lbl" style="font-size:.8rem"><span class="box" style="padding:2px 4px">Goal</span>→<span class="box" style="padding:2px 4px">Phase</span>→<span class="box" style="padding:2px 4px">Week</span>→<span class="box" style="padding:2px 4px">Today</span></div>
+      <span class="lbl">Name</span><div class="input">Sherbaz</div>
+      <span class="lbl">Hours / week</span><div class="input">6</div>
+      <span class="lbl">Check-in time</span><div class="input">7:00 PM</div>
+      <span class="lbl">Buddy</span>
+      <div class="row"><div class="box lbl" style="padding:4px;font-size:.8rem">Gentle</div><div class="box solid lbl" style="padding:4px;font-size:.8rem">Coach</div><div class="box lbl" style="padding:4px;font-size:.8rem">Drill</div></div>
+      <div class="btn">Continue</div>
+      <div class="note">"Load demo" link below for presenting</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>02</b> Add a goal</figcaption>
+    <div class="phone">
+      <div class="line big w70"></div>
+      <div class="row"><div class="box dash lbl" style="padding:2px 4px;font-size:.75rem">Internship</div><div class="box dash lbl" style="padding:2px 4px;font-size:.75rem">GPA 3.7</div><div class="box dash lbl" style="padding:2px 4px;font-size:.75rem">Run 10K</div></div>
+      <span class="lbl">Your big goal</span><div class="input">Land a SWE internship</div>
+      <span class="lbl">Why does it matter?</span><div class="input" style="height:54px">Real experience before…</div>
+      <div class="row"><div><span class="lbl">Deadline</span><div class="input">Jan 12</div></div><div><span class="lbl">Level</span><div class="input">Beginner ▾</div></div></div>
+      <div class="btn">Build my plan</div>
+      <div class="note">Title required, deadline ≥ 1 week away. Uses Gemini if a key is set, else offline planner.</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>03</b> AI is planning</figcaption>
+    <div class="phone" style="background:var(--fill)">
+      <div class="box" style="background:var(--frame);margin-top:90px;align-items:center;gap:10px;padding:18px">
+        <div class="spin" style="margin-top:0"></div>
+        <div class="line big w70"></div>
+        <div class="line w90"></div><div class="line w70"></div>
+      </div>
+      <div class="note">Overlay blocks input. Under 15 s. On error: fall back + toast.</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>04</b> Today (home)</figcaption>
+    <div class="phone">
+      <div class="row"><div class="line big w50" style="flex:none;width:40%"></div><div class="box lbl" style="flex:none;padding:0 8px;border-radius:999px;margin-left:auto">streak 3</div></div>
+      <div class="box solid"><div class="row"><div class="circle" style="background:var(--frame)"></div><div style="display:flex;flex-direction:column;gap:5px"><div class="line w90" style="background:var(--frame)"></div><div class="line w70" style="background:var(--frame)"></div></div></div></div>
+      <div class="row"><div class="box lbl" style="text-align:center;font-size:.8rem">1/3<br>done</div><div class="box lbl" style="text-align:center;font-size:.8rem">90<br>min left</div><div class="box lbl" style="text-align:center;font-size:.8rem">3<br>streak</div></div>
+      <div class="box">
+        <div class="row"><div class="cb x"></div><div class="line w70"></div></div>
+        <div class="row"><div class="cb"></div><div class="line w90"></div><span class="lbl" style="flex:none">→</span></div>
+        <div class="row"><div class="cb"></div><div class="line w50"></div><span class="lbl" style="flex:none">→</span></div>
+        <div class="row"><div class="input" style="flex:3">Add a task</div><div class="btn ghost">Add</div></div>
+      </div>
+      <div class="note">Buddy card at the top reacts to streak / missed day. → = move to tomorrow.</div>
+      <div class="tabs"><span class="on">Today</span><span>Plan</span><span>Progress</span><span>Settings</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>05</b> Plan timeline</figcaption>
+    <div class="phone">
+      <div class="row"><div class="box solid lbl" style="padding:2px 6px;font-size:.75rem;border-radius:999px">Internship</div><div class="box lbl" style="padding:2px 6px;font-size:.75rem;border-radius:999px">10K</div><div class="box dash lbl" style="padding:2px 6px;font-size:.75rem;border-radius:999px">+ New</div></div>
+      <div class="box"><div class="line big w90"></div><div class="line w50"></div><div class="line" style="height:6px;background:var(--ink);width:25%"></div><div class="row"><div class="btn" style="font-size:.75rem">Reschedule missed</div><div class="btn ghost" style="font-size:.75rem">Rebuild</div></div></div>
+      <div style="border-left:3px solid var(--ink);padding-left:8px;display:flex;flex-direction:column;gap:6px">
+        <span class="lbl"><b>Foundation</b> · Sep 14 – Oct 18</span>
+        <div class="box"><div class="row"><div class="line w70"></div><span class="lbl" style="flex:none;font-size:.75rem">W1 3/4</span></div></div>
+        <div class="box" style="border-width:2.5px"><div class="row"><div class="line w90"></div><span class="lbl" style="flex:none;font-size:.75rem">W2 2/4</span></div>
+          <div class="row"><div class="cb x"></div><div class="line w70"></div><span class="lbl" style="flex:none">edit · del</span></div>
+          <div class="row"><div class="cb"></div><div class="line w50"></div><span class="lbl" style="flex:none">edit · del</span></div></div>
+        <span class="lbl"><b>Skill building</b> · Oct 19 – Nov 29</span>
+      </div>
+      <div class="tabs"><span>Today</span><span class="on">Plan</span><span>Progress</span><span>Settings</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>06</b> Progress</figcaption>
+    <div class="phone">
+      <div class="row"><div class="box lbl" style="text-align:center;font-size:.8rem">3<br>streak</div><div class="box lbl" style="text-align:center;font-size:.8rem">5<br>best</div><div class="box lbl" style="text-align:center;font-size:.8rem">82%<br>done</div></div>
+      <div class="box"><span class="lbl">Last 7 days</span><div class="bars"><i style="height:40%"></i><i style="height:70%"></i><i style="height:10%"></i><i style="height:100%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:30%"></i></div></div>
+      <div class="box"><div class="row"><div class="line w70"></div><span class="lbl" style="flex:none;font-size:.75rem">On track</span></div><div class="line" style="height:6px;background:var(--ink);width:35%"></div>
+        <div class="row"><div class="line w70"></div><span class="lbl" style="flex:none;font-size:.75rem">Behind</span></div><div class="line" style="height:6px;background:var(--ink);width:60%"></div></div>
+      <div class="note">On track = ≥70% of tasks due so far are done.</div>
+      <div class="tabs"><span>Today</span><span>Plan</span><span class="on">Progress</span><span>Settings</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>07</b> Settings</figcaption>
+    <div class="phone">
+      <div class="box"><span class="lbl"><b>Profile & buddy</b></span><div class="input">Name</div><div class="row"><div class="box lbl" style="padding:2px;font-size:.75rem">Gentle</div><div class="box solid lbl" style="padding:2px;font-size:.75rem">Coach</div><div class="box lbl" style="padding:2px;font-size:.75rem">Drill</div></div></div>
+      <div class="box"><span class="lbl"><b>Gemini API key</b></span><div class="input">••••••••••</div><div class="row"><div class="btn" style="font-size:.8rem">Save</div><div class="btn ghost" style="font-size:.8rem">Test</div></div></div>
+      <div class="box"><span class="lbl"><b>Reminders</b></span><div class="input">7:00 PM</div><div class="btn ghost" style="font-size:.8rem">Add to calendar (.ics)</div></div>
+      <div class="box"><span class="lbl"><b>Your data</b></span><div class="row"><div class="btn ghost" style="font-size:.75rem">Export</div><div class="btn ghost" style="font-size:.75rem">Import</div><div class="btn ghost" style="font-size:.75rem">Reset</div></div></div>
+      <div class="tabs"><span>Today</span><span>Plan</span><span>Progress</span><span class="on">Settings</span></div>
+    </div>
+  </figure>
+</main>
+
+<div class="flow" aria-label="User flow"><span>Open app</span>→<span>Profile set?</span>→ no →<span>01 Setup</span>→<span>02 Add goal</span>→<span>03 Planning</span>→<span>05 Plan</span>→<span>04 Today</span>⟲ daily</div>
