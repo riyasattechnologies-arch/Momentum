@@ -4,8 +4,8 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Momentum — AI chief of staff for students",
-  description: "Tell Momentum who you want to become. It interviews you, agrees a semester plan with you, builds your day around your classes, and keeps you on it.",
+  title: "Momentum — run your life like an operation",
+  description: "An AI chief of staff for your whole life: it interviews you, agrees a plan with you, runs your day around your real commitments, and keeps you on it.",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon.svg" },
 };

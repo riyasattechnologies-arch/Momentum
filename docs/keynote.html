@@ -14,8 +14,8 @@
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html, body { height: 100%; }
-body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; -webkit-font-smoothing: antialiased; }
+html, body { height: 100%; background: var(--bg); }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; -webkit-font-smoothing: antialiased; }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
@@ -23,7 +23,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .grad { background: linear-gradient(90deg, var(--accent), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* Viewport + scaled 1600x900 stage */
-#viewport { position: fixed; inset: 0; display: grid; place-items: center; padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+#viewport { position: relative; width: 100%; height: 100vh; min-height: calc(56.25vw + 56px); display: grid; place-items: center; padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: var(--bg); }
 #stage { width: 1600px; height: 900px; position: relative; transform-origin: center center; flex: none; }
 .bg-grid { position: absolute; inset: -40px; pointer-events: none; opacity: .28;
   background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
@@ -312,7 +312,7 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2)
     <div class="bg-grid"></div>
 
     <!-- 0 · Title -->
-    <section class="slide" id="s0" data-title="Momentum" data-notes="Hi, I'm Sherbaz. This is Momentum. The idea is simple: run your life like an operation. Move your mouse over the background: every dot is a goal, a task, a commitment or a deadline, and the lines are how they connect. Most people run their lives with no system. Momentum is the system.">
+    <section class="slide active" id="s0" data-title="Momentum" data-notes="Hi, I'm Sherbaz. This is Momentum. The idea is simple: run your life like an operation. Move your mouse over the background: every dot is a goal, a task, a commitment or a deadline, and the lines are how they connect. Most people run their lives with no system. Momentum is the system.">
       <canvas id="net0"></canvas>
       <div class="content">
         <span class="pill-live in" style="--d:0"><span class="blink"></span>GDG PROJECT SHOWCASE · 2026</span>
@@ -601,9 +601,12 @@ kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2)
   // ---------- Scale stage ----------
   const stage = $("#stage");
   let scale = 1;
+  const vp = document.getElementById("viewport");
   function fit() {
-    const vw = innerWidth, vh = innerHeight - 56;
-    scale = Math.min(vw / 1600, vh / 900);
+    const vw = vp.clientWidth || innerWidth || 1280;
+    let vh = (innerHeight || 0) - 56;
+    if (vh < 200) { vh = vw * 9 / 16; vp.style.height = (vh + 56) + "px"; } else { vp.style.height = ""; }
+    scale = Math.max(0.1, Math.min(vw / 1600, vh / 900));
     stage.style.transform = `scale(${scale})`;
   }
   addEventListener("resize", fit); fit();

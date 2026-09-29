@@ -33,7 +33,7 @@ function Counter({ to, suffix = "" }: { to: number; suffix?: string }) {
   return <span ref={ref} className="num">{v}{suffix}</span>;
 }
 
-const TICKER = ["SYS ● ONLINE", "INTAKE → PLAN → SCHEDULE → REMIND → ADAPT", "P1 / P2 / P3 EVERY DAY", "AI PROPOSES · YOU DECIDE", "EVERY CHANGE VERSIONED", "DETERMINISTIC SCHEDULER", "GEMINI-POWERED PLANNING", "BUILT FOR FIRST-SEMESTER STUDENTS"];
+const TICKER = ["SYS ● ONLINE", "INTAKE → PLAN → SCHEDULE → REMIND → ADAPT", "P1 / P2 / P3 EVERY DAY", "AI PROPOSES · YOU DECIDE", "EVERY CHANGE VERSIONED", "DETERMINISTIC SCHEDULER", "GEMINI-POWERED PLANNING", "CAREER · HEALTH · MONEY · LEARNING"];
 
 function Ticker() {
   const row = [...TICKER, ...TICKER];
@@ -132,9 +132,9 @@ function StepVisual({ i }: { i: number }) {
 }
 
 const STEPS = [
-  { k: "Interview", t: "It learns who you are", d: "Eleven questions: courses, class times, sleep, energy peaks, hours you can give, and the goals you actually care about. Upload your .ics timetable to skip typing." },
-  { k: "Negotiate", t: "You agree on the plan", d: "It proposes a semester of milestones and weekly work that fits your hours. Push back in plain English. Every change comes back as a diff you approve." },
-  { k: "Execute", t: "It runs your day", d: "A time-blocked schedule around your classes. One Primary task, a few Secondary, optional Tertiary. Reminders before every block." },
+  { k: "Interview", t: "It learns who you are", d: "Eleven questions: work, classes, family, sleep, energy peaks, hours you can give, and the goals you care about across your whole life. Import your calendar to skip typing." },
+  { k: "Negotiate", t: "You agree on the plan", d: "It proposes milestones and weekly work that fit your hours. Push back in plain English. Every change comes back as a diff you approve." },
+  { k: "Execute", t: "It runs your day", d: "A time-blocked schedule around your work, classes and life. One Primary task, a few Secondary, optional Tertiary. Reminders before every block." },
   { k: "Adapt", t: "It re-plans when life happens", d: "Missed a block? Sick until Wednesday? It proposes the smallest fix, you approve, and a new version of the plan is locked." },
 ];
 
@@ -154,7 +154,7 @@ export default function Landing() {
   const scale = useTransform(dashP, [0, 1], [0.92, 1]);
   const health = demo ? demo.goals.map((g) => goalHealth(g, demo.tasks, demo.milestones)) : [];
   const riskList = demo ? risks(demo.profile, demo.goals, demo.tasks, demo.milestones).slice(0, 4) : [];
-  const words = "Run your semester like an operation.".split(" ");
+  const words = "Run your life like an operation.".split(" ");
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-bg text-text">
@@ -183,7 +183,7 @@ export default function Landing() {
         <motion.div style={{ y: heroY, opacity: heroO }} className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 md:px-8 lg:grid-cols-[1.1fr_1fr] lg:py-28">
           <div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="label mb-5 inline-flex items-center gap-2 rounded-full border border-line-2 bg-panel/60 px-3 py-1 !text-accent">
-              <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-accent-2" /> AI chief of staff for students
+              <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-accent-2" /> AI chief of staff for your life
             </motion.div>
             <h1 className="text-[clamp(2.6rem,6.2vw,5.2rem)] font-semibold leading-[1.02] tracking-[-0.035em] [text-wrap:balance]">
               {words.map((w, i) => (
@@ -193,7 +193,7 @@ export default function Landing() {
               ))}
             </h1>
             <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.8, ease }} className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              Tell Momentum who you want to become. It interviews you, agrees a semester plan with you, builds every day around your classes, and keeps pushing until it's done.
+              Career, health, money, learning. Tell Momentum who you want to become. It interviews you, agrees a plan with you, runs every day around your real commitments, and keeps pushing until it's done.
             </motion.p>
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8, ease }} className="mt-9 flex flex-wrap gap-3">
               <Link href="/app" className="group inline-flex h-12 items-center gap-2 rounded-md bg-accent px-6 font-medium text-[#06101c] transition hover:bg-[#6aafff]">Start your interview <span className="transition group-hover:translate-x-1">→</span></Link>
@@ -260,7 +260,7 @@ export default function Landing() {
           <div>
             <Reveal><div className="label !text-accent">The ontology</div></Reveal>
             <Reveal delay={0.05}><h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl [text-wrap:balance]">Your life, modeled as objects that link.</h2></Reveal>
-            <Reveal delay={0.1}><p className="mt-5 max-w-lg text-lg leading-relaxed text-muted">Goals break into milestones, milestones into tasks, tasks into time blocks around your courses and classes. The AI, the scheduler and the dashboard all read the same model, so nothing drifts out of sync.</p></Reveal>
+            <Reveal delay={0.1}><p className="mt-5 max-w-lg text-lg leading-relaxed text-muted">Goals break into milestones, milestones into tasks, tasks into time blocks around your job, classes and family. The AI, the scheduler and the dashboard all read the same model, so nothing drifts out of sync.</p></Reveal>
             <div className="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-3">
               {["Student", "Goal", "Milestone", "Task", "TimeBlock", "Course", "FixedEvent", "Proposal", "PlanVersion"].map((o, i) => (
                 <Reveal key={o} delay={0.04 * i} y={10}>
@@ -371,12 +371,12 @@ export default function Landing() {
         <NetworkCanvas density={0.00006} className="-z-10 opacity-70" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(76,158,255,0.14),transparent_60%)]" />
         <div className="mx-auto max-w-4xl px-4 text-center md:px-8">
-          <Reveal><h2 className="text-4xl font-semibold tracking-tight md:text-6xl [text-wrap:balance]">Your first semester only happens once.</h2></Reveal>
+          <Reveal><h2 className="text-4xl font-semibold tracking-tight md:text-6xl [text-wrap:balance]">Your life is the biggest operation you'll ever run.</h2></Reveal>
           <Reveal delay={0.1}><p className="mx-auto mt-5 max-w-xl text-lg text-muted">Ten minutes of questions. A plan you both agree on. A buddy that doesn't let you drift.</p></Reveal>
           <Reveal delay={0.2}>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link href="/app" className="inline-flex h-12 items-center rounded-md bg-accent px-7 font-medium text-[#06101c] hover:bg-[#6aafff]">Start your interview →</Link>
-              <Link href="/demo" className="inline-flex h-12 items-center rounded-md border border-line-2 bg-panel/60 px-7 font-medium hover:border-dim">See Aisha's semester</Link>
+              <Link href="/demo" className="inline-flex h-12 items-center rounded-md border border-line-2 bg-panel/60 px-7 font-medium hover:border-dim">See a live example</Link>
             </div>
           </Reveal>
         </div>
@@ -384,7 +384,7 @@ export default function Landing() {
 
       <footer className="border-t border-line">
         <div className="num mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-[11px] text-dim md:px-8">
-          <span>MOMENTUM · AI CHIEF OF STAFF FOR STUDENTS</span>
+          <span>MOMENTUM · RUN YOUR LIFE LIKE AN OPERATION</span>
           <span>BUILT BY SHERBAZ RIASAT · GDG PROJECT SHOWCASE 2026</span>
         </div>
       </footer>
