@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+</head>
+<body>
+<title>Momentum Wireframes</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root {
+  --paper: #F4F4F1; --frame: #FFFFFF; --ink: #2B2E2C; --pencil: #8C918D; --fill: #E4E6E2; --fill-2: #D2D5D0; --note: #2743C9;
+  --hand: "Kalam", "Comic Sans MS", cursive; --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; --paper: #121513; --frame: #1B1F1D; --ink: #E3E6E4; --pencil: #8E9691; --fill: #2A2F2C; --fill-2: #363C38; --note: #8FA3FF; }
+}
+:root[data-theme="dark"] { color-scheme: dark; --paper: #121513; --frame: #1B1F1D; --ink: #E3E6E4; --pencil: #8E9691; --fill: #2A2F2C; --fill-2: #363C38; --note: #8FA3FF; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--body); padding-inline: 16px; padding-block: 28px 48px; }
+header { max-width: 1100px; margin: 0 auto 24px; display: flex; flex-direction: column; gap: 6px; }
+h1 { font-family: var(--hand); font-size: 2.2rem; margin: 0; line-height: 1.1; }
+header p { margin: 0; color: var(--pencil); max-width: 62ch; }
+.board { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 22px; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 10px; }
+figcaption { font-family: var(--hand); font-size: 1.15rem; display: flex; gap: 8px; align-items: baseline; }
+figcaption b { font-family: var(--body); font-size: .75rem; letter-spacing: .08em; color: var(--pencil); }
+.phone { background: var(--frame); border: 2px solid var(--ink); border-radius: 26px; padding: 14px 12px 0; height: 470px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; position: relative; }
+.phone::before { content: ""; align-self: center; width: 60px; height: 5px; border-radius: 4px; background: var(--fill-2); margin-bottom: 2px; }
+.box { border: 1.5px solid var(--ink); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.box.solid { background: var(--fill-2); border-color: var(--fill-2); }
+.box.dash { border-style: dashed; border-color: var(--pencil); }
+.line { height: 8px; background: var(--fill-2); border-radius: 4px; }
+.line.w90 { width: 90%; } .line.w70 { width: 70%; } .line.w50 { width: 50%; } .line.w30 { width: 30%; }
+.line.big { height: 14px; background: var(--ink); opacity: .75; }
+.lbl { font-family: var(--hand); font-size: .95rem; line-height: 1.2; }
+.input { border: 1.5px solid var(--pencil); border-radius: 6px; height: 26px; padding: 3px 6px; font-family: var(--hand); font-size: .85rem; color: var(--pencil); }
+.btn { border: 1.5px solid var(--ink); background: var(--ink); color: var(--frame); border-radius: 8px; text-align: center; font-family: var(--hand); font-weight: 700; padding: 4px; }
+.btn.ghost { background: none; color: var(--ink); }
+.row { display: flex; gap: 6px; align-items: center; }
+.row > * { flex: 1; }
+.cb { flex: none; width: 16px; height: 16px; border: 1.5px solid var(--ink); border-radius: 4px; }
+.cb.x { background: var(--ink); }
+.circle { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--ink); }
+.tabs { margin-top: auto; border-top: 1.5px solid var(--ink); display: flex; justify-content: space-around; padding: 8px 0 12px; font-family: var(--hand); font-size: .8rem; }
+.tabs .on { text-decoration: underline; text-decoration-thickness: 2px; }
+.bars { display: flex; align-items: flex-end; gap: 6px; height: 70px; }
+.bars i { flex: 1; background: var(--fill-2); border: 1.5px solid var(--ink); border-radius: 3px 3px 0 0; }
+.note { font-family: var(--hand); color: var(--note); font-size: .95rem; line-height: 1.3; }
+.spin { width: 44px; height: 44px; border-radius: 50%; border: 4px dashed var(--ink); align-self: center; margin-top: 40px; }
+.flow { max-width: 1100px; margin: 36px auto 0; font-family: var(--hand); font-size: 1.1rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.flow span { border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 12px; background: var(--frame); }
+</style>
+
+<style>
+.pill { font-family: var(--hand); font-size: .75rem; border: 1.5px solid var(--ink); border-radius: 5px; padding: 0 5px; flex: none; }
+.pill.p3 { border-style: dashed; color: var(--pencil); border-color: var(--pencil); }
+.diff { font-family: var(--hand); font-size: .85rem; display: flex; gap: 6px; align-items: center; }
+.diff b { flex: none; width: 16px; text-align: center; }
+.strike { text-decoration: line-through; color: var(--pencil); }
+.desk { grid-column: 1 / -1; }
+.screen { background: var(--frame); border: 2px solid var(--ink); border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+</style>
+
+<header>
+  <h1>Momentum v2 · wireframes</h1>
+  <p>Nine screens of the v2 MVP: run your life like an operation. Grey blocks are content, dark blocks are primary actions, blue notes explain behaviour. The example user is Alex: a full-time job, a side project, a savings goal and a 10K. The high-fidelity design is the working app.</p>
+</header>
+
+<main class="board">
+  <figure>
+    <figcaption><b>01</b> Landing</figcaption>
+    <div class="phone">
+      <div class="row"><div class="lbl" style="flex:none"><b>Momentum</b></div><div class="btn" style="flex:none;padding:2px 8px;font-size:.8rem">Launch</div></div>
+      <div class="box dash lbl" style="font-size:.75rem;align-self:flex-start;padding:2px 6px">AI chief of staff for your life</div>
+      <div class="lbl" style="font-size:1.6rem;line-height:1.05"><b>Run your life like an operation.</b></div>
+      <div class="line w90"></div><div class="line w70"></div>
+      <div class="btn">Start your interview →</div>
+      <div class="btn ghost">Open the live demo</div>
+      <div class="box" style="margin-top:6px"><span class="lbl" style="font-size:.8rem">› planner.propose()</span><div class="line w70"></div><div class="line w50"></div></div>
+      <div class="note">Moving network background + self-typing console. Scroll: how it works, ontology, Command Center.</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>02</b> Interview</figcaption>
+    <div class="phone">
+      <div class="lbl" style="font-size:.8rem">STEP 01 · 11 questions</div>
+      <div class="line" style="height:5px;background:var(--ink);width:55%"></div>
+      <div class="box"><span class="lbl">05 · What are your fixed commitments?</span></div>
+      <div class="box solid lbl" style="align-self:flex-end;max-width:85%;font-size:.8rem">Work Mon–Fri 9:00–17:30<br>Gym Tue Thu 18:00–19:00<br>Family call Sun 20:00</div>
+      <div class="box"><span class="lbl">06 · When do you wake up and sleep?</span></div>
+      <div class="input" style="height:auto">6:30 and 23:00</div>
+      <div class="row"><div class="btn">Answer</div><div class="btn ghost">Use example</div></div>
+      <div class="btn ghost" style="font-size:.8rem">Import .ics calendar</div>
+      <div class="note">Then an editable summary: profile, goals, commitments.</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>03</b> Review summary</figcaption>
+    <div class="phone">
+      <div class="lbl"><b>Here's what I understood, Alex</b></div>
+      <div class="box"><span class="lbl" style="font-size:.8rem">Profile</span><div class="row"><div class="input">14 h / week</div><div class="input">Morning</div></div><div class="row"><div class="input">Coach</div><div class="input">Sun off</div></div></div>
+      <div class="box"><span class="lbl" style="font-size:.8rem">Goals</span>
+        <div class="row lbl" style="font-size:.8rem"><span>● Launch side project</span><span style="flex:none">P1</span></div>
+        <div class="row lbl" style="font-size:.8rem"><span>● Save $5,000 by Dec</span><span style="flex:none">P2</span></div>
+        <div class="row lbl" style="font-size:.8rem"><span>● Run a 10K</span><span style="flex:none">P3</span></div></div>
+      <div class="box"><span class="lbl" style="font-size:.8rem">Fixed commitments</span><div class="line w90"></div><div class="line w70"></div></div>
+      <div class="btn">Build my plan →</div>
+      <div class="note">Every field editable before planning.</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>04</b> Plan + negotiation</figcaption>
+    <div class="phone">
+      <div class="box dash note" style="font-size:.8rem;padding:4px">Draft: nothing runs until Agree &amp; lock</div>
+      <div class="box"><span class="lbl" style="font-size:.8rem">Weekly load vs 14 h</span><div class="bars" style="height:44px"><i style="height:70%"></i><i style="height:85%"></i><i style="height:100%;background:var(--ink)"></i><i style="height:60%"></i><i style="height:75%"></i></div></div>
+      <div class="box solid lbl" style="align-self:flex-end;font-size:.8rem">November is crunch at work, lighten it</div>
+      <div class="box">
+        <span class="lbl" style="font-size:.8rem"><b>Proposal · 4 changes</b></span>
+        <div class="diff"><b>−</b><span class="strike">Newsletter draft</span></div>
+        <div class="diff"><b>~</b><span>Signup flow 90m → 60m</span></div>
+        <div class="diff"><b>~</b><span>Spanish 3x → 2x a week</span></div>
+        <div class="diff"><b>+</b><span>7h sleep reminder</span></div>
+        <div class="row"><div class="btn" style="font-size:.8rem">Approve</div><div class="btn ghost" style="font-size:.8rem">Reject</div></div>
+      </div>
+      <div class="btn">Agree &amp; lock v1</div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>05</b> Today</figcaption>
+    <div class="phone">
+      <div class="box solid"><span class="lbl" style="font-size:.8rem"><b>Let's go, Alex.</b></span><div class="line w90" style="background:var(--frame)"></div><div class="line w70" style="background:var(--frame)"></div></div>
+      <div class="row"><div class="box lbl" style="text-align:center;font-size:.75rem">1/4<br>done</div><div class="box lbl" style="text-align:center;font-size:.75rem">2h<br>left</div><div class="box lbl" style="text-align:center;font-size:.75rem">12d<br>streak</div></div>
+      <div class="box" style="gap:5px">
+        <div class="row lbl" style="font-size:.78rem"><span style="flex:none;width:38px">06:45</span><span class="pill">P1</span><span>Deep work: side project</span></div>
+        <div class="row lbl" style="font-size:.78rem;color:var(--pencil)"><span style="flex:none;width:38px">09:00</span><span class="pill p3">FIXED</span><span>Work</span></div>
+        <div class="row lbl" style="font-size:.78rem"><span style="flex:none;width:38px">12:35</span><span class="pill">P2</span><span>Move $150 to savings</span></div>
+        <div class="row lbl" style="font-size:.78rem"><span style="flex:none;width:38px">19:00</span><span class="pill">P1</span><span>Spanish lesson</span></div>
+        <div class="row"><div class="btn" style="font-size:.75rem">Start</div><div class="btn ghost" style="font-size:.75rem">Done</div><div class="btn ghost" style="font-size:.75rem">Skip</div></div>
+      </div>
+      <div class="box" style="border-color:var(--note)"><span class="note" style="font-size:.8rem">Up next 19:00 · Spanish · P1 [Start] [Snooze]</span></div>
+      <div class="tabs"><span class="on">Today</span><span>Week</span><span>Plan</span><span>Command</span><span>Review</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>06</b> Week</figcaption>
+    <div class="phone">
+      <div class="lbl"><b>Sep 28 – Oct 4</b> <span style="color:var(--pencil);font-size:.8rem">11.5 h planned</span></div>
+      <div class="row" style="align-items:stretch;height:300px;gap:3px">
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:22px;background:var(--ink)"></div><div class="box dash" style="height:70px"></div><div class="line" style="height:14px"></div></div>
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:18px"></div><div class="box dash" style="height:70px"></div><div class="line" style="height:30px;background:var(--ink)"></div></div>
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:22px;background:var(--ink)"></div><div class="box dash" style="height:70px"></div></div>
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:14px"></div><div class="box dash" style="height:70px"></div><div class="line" style="height:22px"></div></div>
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:30px;background:var(--ink)"></div><div class="box dash" style="height:70px"></div></div>
+        <div class="box" style="padding:3px;gap:3px"><div class="line" style="height:40px;background:var(--ink)"></div></div>
+      </div>
+      <div class="note">Dashed = fixed commitments. Future days are projected and re-planned nightly.</div>
+      <div class="tabs"><span>Today</span><span class="on">Week</span><span>Plan</span><span>Command</span><span>Review</span></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>07</b> Evening review</figcaption>
+    <div class="phone">
+      <div class="lbl"><b>How did today go, Alex?</b></div>
+      <div class="box">
+        <div class="row lbl" style="font-size:.78rem"><span>Deep work</span><span class="pill" style="flex:none">done</span></div>
+        <div class="row lbl" style="font-size:.78rem"><span>Savings transfer</span><span class="pill" style="flex:none">partial</span></div>
+        <div class="row lbl" style="font-size:.78rem"><span>Spanish lesson</span><span class="pill p3" style="flex:none">skipped</span></div>
+      </div>
+      <div class="box"><span class="lbl" style="font-size:.8rem">Mood 1–5 · Energy 1–5</span><div class="row"><div class="box" style="padding:2px"></div><div class="box" style="padding:2px"></div><div class="box solid" style="padding:2px"></div><div class="box" style="padding:2px"></div><div class="box" style="padding:2px"></div></div></div>
+      <div class="btn">Close the day &amp; plan tomorrow</div>
+      <div class="box" style="border-color:var(--note)"><span class="note" style="font-size:.8rem">Proposal: Spanish → Wed 19:00, savings → Thu 12:35</span><div class="row"><div class="btn" style="font-size:.75rem">Approve</div><div class="btn ghost" style="font-size:.75rem">Reject</div></div></div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption><b>08</b> Chief-of-staff chat</figcaption>
+    <div class="phone">
+      <div class="lbl" style="font-size:.8rem">Press / anywhere</div>
+      <div class="box solid lbl" style="align-self:flex-end;font-size:.8rem">I'm sick until Wednesday</div>
+      <div class="box lbl" style="font-size:.8rem">You're out until Wed. P1/P2 move to Thu–Fri; optional work drops.</div>
+      <div class="box">
+        <div class="diff"><b>~</b><span>Interval run Tue → Thu</span></div>
+        <div class="diff"><b>~</b><span>Promo packet Wed → Thu</span></div>
+        <div class="diff"><b>−</b><span class="strike">Compare savings accounts</span></div>
+        <div class="row"><div class="btn" style="font-size:.75rem">Approve</div><div class="btn ghost" style="font-size:.75rem">Reject</div></div>
+      </div>
+      <div class="row"><div class="box dash lbl" style="font-size:.7rem;padding:2px">What should I do now?</div><div class="box dash lbl" style="font-size:.7rem;padding:2px">Am I on track?</div></div>
+      <div class="input">Ask or tell…</div>
+      <div class="note">Approving locks a new plan version.</div>
+    </div>
+  </figure>
+
+  <figure class="desk">
+    <figcaption><b>09</b> Command Center (desktop)</figcaption>
+    <div class="screen">
+      <div class="row"><div class="box lbl" style="text-align:center">Goals on track<br><b>1/3</b></div><div class="box lbl" style="text-align:center">Execution 14d<br><b>84%</b></div><div class="box lbl" style="text-align:center">P1 hit rate<br><b>91%</b></div><div class="box lbl" style="text-align:center">Streak<br><b>12d</b></div><div class="box lbl" style="text-align:center">Open risks<br><b>3</b></div></div>
+      <div class="row" style="align-items:stretch">
+        <div class="box" style="flex:1.4"><span class="lbl"><b>Goal health</b></span>
+          <div class="row lbl" style="font-size:.85rem"><span>Launch side project</span><span class="pill" style="flex:none">off track</span><div class="line" style="background:var(--ink);width:20%;flex:none"></div></div>
+          <div class="row lbl" style="font-size:.85rem"><span>Save $5,000</span><span class="pill" style="flex:none">on track</span><div class="line" style="background:var(--ink);width:45%;flex:none"></div></div>
+          <div class="row lbl" style="font-size:.85rem"><span>Run a 10K</span><span class="pill" style="flex:none">at risk</span><div class="line" style="background:var(--ink);width:32%;flex:none"></div></div></div>
+        <div class="box"><span class="lbl"><b>Risk feed</b></span>
+          <div class="row lbl" style="font-size:.85rem"><span>Landing page overdue</span><div class="btn ghost" style="flex:none;padding:0 6px">Fix</div></div>
+          <div class="row lbl" style="font-size:.85rem"><span>3 P1 missed</span><div class="btn ghost" style="flex:none;padding:0 6px">Fix</div></div></div>
+      </div>
+      <div class="row" style="align-items:stretch">
+        <div class="box" style="flex:1.4"><span class="lbl"><b>Timeline</b> ◆ milestones</span><div class="line w90"></div><div class="line w70"></div><div class="line w50"></div></div>
+        <div class="box"><span class="lbl"><b>Ontology · Action log</b></span><div class="line w70"></div><div class="line w50"></div></div>
+      </div>
+      <div class="note">Fix drafts the smallest re-plan as a proposal; goal status updates once approved.</div>
+    </div>
+  </figure>
+</main>
+
+<div class="flow" aria-label="User flow"><span>Landing</span>→<span>02 Interview</span>→<span>03 Review</span>→<span>04 Plan</span>→ agree &amp; lock →<span>05 Today</span>→<span>07 Review</span>→ re-plan ⟲ · <span>08 Chat</span> and <span>09 Command</span> anytime</div>
+
+</body>
+</html>

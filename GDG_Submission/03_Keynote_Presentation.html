@@ -1,0 +1,1163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}</style>
+</head>
+<body>
+<title>Momentum Keynote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0a0d10; --panel: #0f1419; --panel-2: #141b21; --line: #1e2730; --line-2: #2a3642;
+  --text: #dde4ea; --muted: #8a99a7; --dim: #5b6977;
+  --accent: #4c9eff; --cyan: #2fd3d0; --amber: #f2a33a; --green: #3dd68c; --red: #f2555a; --violet: #c38bff;
+  --sans: "Geist", "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; background: var(--bg); }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--sans); overflow: hidden; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--mono); font-size: 15px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); }
+.grad { background: linear-gradient(90deg, var(--accent), var(--cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Viewport + scaled 1600x900 stage */
+#viewport { position: relative; width: 100%; height: 100vh; min-height: calc(56.25vw + 56px); display: grid; place-items: center; padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: var(--bg); }
+#stage { width: 1600px; height: 900px; position: relative; transform-origin: center center; flex: none; }
+.bg-grid { position: absolute; inset: -40px; pointer-events: none; opacity: .28;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px; mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); }
+
+.slide { position: absolute; inset: 0; padding: 92px 110px 80px; display: flex; flex-direction: column; gap: 28px;
+  opacity: 0; visibility: hidden; transform: translateX(60px) scale(.98); filter: blur(8px);
+  transition: opacity .7s var(--ease), transform .8s var(--ease), filter .7s var(--ease), visibility 0s linear .8s; }
+.slide.active { opacity: 1; visibility: visible; transform: none; filter: none; transition: opacity .7s var(--ease), transform .8s var(--ease), filter .7s var(--ease), visibility 0s; }
+.slide.past { transform: translateX(-60px) scale(.98); }
+.slide h1 { font-size: 104px; line-height: .98; letter-spacing: -.045em; margin: 0; font-weight: 650; text-wrap: balance; }
+.slide h2 { font-size: 64px; line-height: 1.02; letter-spacing: -.035em; margin: 0; font-weight: 620; text-wrap: balance; max-width: 1250px; }
+.slide p.lede { font-size: 26px; line-height: 1.45; color: var(--muted); margin: 0; max-width: 980px; }
+
+/* Staggered entrance for anything with .in */
+.slide .in { opacity: 0; transform: translateY(22px); }
+.slide.active .in { animation: rise .9s var(--ease) forwards; animation-delay: calc(var(--d, 0) * 90ms + 200ms); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .slide, .slide.active { transition: none; filter: none; transform: none; }
+  .slide .in, .slide.active .in { animation: none; opacity: 1; transform: none; }
+}
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; }
+.chip { border: 1px solid var(--line-2); background: var(--panel-2); border-radius: 999px; padding: 10px 18px; font-size: 18px; color: var(--muted); transition: all .25s var(--ease); }
+.chip:hover, .chip[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: rgba(76,158,255,.12); }
+.btn { border: 0; background: var(--accent); color: #06101c; font-weight: 650; font-size: 20px; padding: 16px 28px; border-radius: 12px; transition: transform .2s var(--ease), background .2s; }
+.btn:hover { background: #6aafff; transform: translateY(-2px); }
+.btn.ghost { background: var(--panel-2); color: var(--text); border: 1px solid var(--line-2); }
+.btn.ghost:hover { border-color: var(--muted); }
+.tier { font-family: var(--mono); font-size: 13px; font-weight: 600; padding: 3px 8px; border-radius: 6px; border: 1px solid; flex: none; }
+.t1 { color: var(--accent); border-color: rgba(76,158,255,.45); background: rgba(76,158,255,.14); }
+.t2 { color: var(--muted); border-color: var(--line-2); background: var(--panel-2); }
+.t3 { color: var(--dim); border-color: var(--line-2); border-style: dashed; }
+.hint { font-family: var(--mono); font-size: 14px; color: var(--dim); letter-spacing: .08em; }
+.hint b { color: var(--accent); font-weight: 500; }
+
+/* Chrome */
+#topbar { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; z-index: 20; pointer-events: none; }
+#topbar > * { pointer-events: auto; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
+.brand svg { width: 26px; height: 26px; }
+#slideTitle { font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: .14em; text-transform: uppercase; }
+#bottombar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; padding: 0 16px calc(10px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 10px; }
+#progress { position: fixed; left: 0; right: 0; bottom: 0; height: 3px; background: var(--line); z-index: 21; }
+#progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); transition: width .6s var(--ease); }
+.ctrl { background: rgba(15,20,25,.85); border: 1px solid var(--line-2); border-radius: 10px; height: 38px; min-width: 38px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; color: var(--muted); backdrop-filter: blur(8px); }
+.ctrl:hover { color: var(--text); border-color: var(--muted); }
+.ctrl svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+#counter { font-family: var(--mono); font-size: 13px; color: var(--muted); min-width: 64px; text-align: center; }
+.dots { display: flex; gap: 6px; flex: 1; justify-content: center; flex-wrap: wrap; }
+.dots button { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; background: var(--line-2); transition: all .3s var(--ease); }
+.dots button.on { background: var(--accent); width: 26px; border-radius: 6px; }
+@media (max-width: 640px) { .dots { display: none; } .hide-sm { display: none !important; } #bottombar { justify-content: space-between; } }
+
+/* Overlays */
+.overlay { position: fixed; inset: 0; z-index: 40; background: rgba(6,9,12,.86); backdrop-filter: blur(10px); display: grid; place-items: center; padding: 24px 16px; opacity: 0; transition: opacity .35s var(--ease); }
+.overlay.show { opacity: 1; }
+#overview .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; width: min(1180px, 100%); max-height: 86vh; overflow-y: auto; padding: 4px; }
+#overview button { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; min-height: 110px; transition: all .25s var(--ease); }
+#overview button:hover, #overview button.on { border-color: var(--accent); transform: translateY(-3px); }
+#overview .n { font-family: var(--mono); color: var(--accent); font-size: 12px; }
+#overview .t { font-size: 17px; font-weight: 600; }
+#notes { position: fixed; right: 16px; bottom: 64px; width: min(420px, calc(100% - 32px)); z-index: 30; background: rgba(15,20,25,.95); border: 1px solid var(--line-2); border-radius: 14px; padding: 16px 18px; font-size: 15px; line-height: 1.55; color: var(--muted); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+#notes .eyebrow { font-size: 11px; margin-bottom: 6px; }
+#help .card { padding: 28px 32px; width: min(520px, 100%); }
+#help table { width: 100%; border-collapse: collapse; font-size: 15px; }
+#help td { padding: 7px 0; border-bottom: 1px solid var(--line); color: var(--muted); }
+#help td:first-child { width: 140px; }
+kbd { font-family: var(--mono); font-size: 12px; border: 1px solid var(--line-2); background: var(--panel-2); border-radius: 5px; padding: 2px 7px; color: var(--text); }
+
+/* ---- Slide specific ---- */
+/* 0 title */
+#s0 { justify-content: center; }
+#s0 canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#s0 .content { position: relative; display: flex; flex-direction: column; gap: 30px; max-width: 1100px; }
+#s0 h1 { font-size: 128px; }
+.pill-live { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line-2); background: rgba(15,20,25,.7); border-radius: 999px; padding: 8px 16px; font-family: var(--mono); font-size: 14px; letter-spacing: .14em; color: var(--cyan); align-self: flex-start; }
+.blink { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: blink 1.6s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.meta-row { display: flex; gap: 40px; font-family: var(--mono); font-size: 16px; color: var(--dim); letter-spacing: .1em; }
+
+/* 1 chaos */
+#chaosField { position: relative; flex: 1; border: 1px solid var(--line); border-radius: 22px; background: radial-gradient(ellipse at center, rgba(76,158,255,.06), transparent 70%); overflow: hidden; }
+.gchip { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 20px; padding: 10px 18px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--line-2); transition: transform 1.1s var(--ease), background .6s, border-color .6s, opacity .6s; will-change: transform; }
+.gchip.ordered { background: var(--panel); }
+.col-head { position: absolute; top: 22px; font-family: var(--mono); font-size: 14px; letter-spacing: .16em; color: var(--dim); text-transform: uppercase; opacity: 0; transition: opacity .6s .4s; }
+#chaosField.ordered .col-head { opacity: 1; }
+.chaos-row { display: flex; align-items: center; gap: 18px; }
+.chaos-stat { font-family: var(--mono); font-size: 18px; color: var(--muted); }
+.chaos-stat b { color: var(--red); font-weight: 500; transition: color .4s; }
+.ordered-state .chaos-stat b { color: var(--green); }
+
+/* 2 personas */
+.personas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; flex: 1; }
+.persona { position: relative; text-align: left; padding: 34px; display: flex; flex-direction: column; gap: 16px; transition: transform .5s var(--ease), border-color .3s; transform-style: preserve-3d; overflow: hidden; }
+.persona:hover { border-color: var(--line-2); }
+.persona .big { font-size: 34px; font-weight: 620; letter-spacing: -.02em; }
+.persona .wants { font-size: 22px; color: var(--muted); line-height: 1.45; }
+.persona .quote { margin-top: auto; font-size: 20px; line-height: 1.5; color: var(--text); border-left: 3px solid var(--accent); padding-left: 16px; max-height: 0; opacity: 0; transition: max-height .6s var(--ease), opacity .5s; }
+.persona[aria-expanded="true"] { border-color: var(--accent); }
+.persona[aria-expanded="true"] .quote { max-height: 200px; opacity: 1; }
+.persona .tag { font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--dim); }
+.persona .glow { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(76,158,255,.14), transparent 60%); }
+.persona:hover .glow { opacity: 1; }
+.persona .meter { height: 6px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.persona .meter i { display: block; height: 100%; background: var(--accent); width: 0; transition: width 1.2s var(--ease); }
+.slide.active .persona .meter i { width: var(--w); }
+
+/* 3 breakdown */
+.bd-form { display: flex; gap: 14px; align-items: center; }
+.bd-form input { flex: 1; font: inherit; font-size: 24px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 14px; padding: 18px 22px; }
+.bd-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(76,158,255,.15); }
+.bd-presets { display: flex; gap: 10px; flex-wrap: wrap; }
+.ladder { display: grid; grid-template-columns: 1.05fr 1.25fr 1.3fr 1.2fr; gap: 20px; flex: 1; min-height: 0; }
+.rung { padding: 22px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.rung h3 { margin: 0; font-family: var(--mono); font-size: 14px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); font-weight: 500; display: flex; justify-content: space-between; }
+.rung .item { font-size: 18px; line-height: 1.35; padding: 12px 14px; border-radius: 10px; background: var(--panel-2); border: 1px solid var(--line); opacity: 0; transform: translateX(-12px); animation: rise2 .6s var(--ease) forwards; display: flex; gap: 10px; align-items: flex-start; }
+.rung .item small { display: block; font-family: var(--mono); color: var(--dim); font-size: 13px; margin-top: 4px; }
+@keyframes rise2 { to { opacity: 1; transform: none; } }
+.rung.goal .item { background: linear-gradient(135deg, rgba(76,158,255,.18), rgba(47,211,208,.08)); border-color: rgba(76,158,255,.4); font-size: 24px; font-weight: 600; }
+.arrow-flow { position: absolute; }
+
+/* 4 pipeline */
+.pipe { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
+.pipe-line { position: absolute; left: 6%; right: 6%; top: 44px; height: 2px; background: var(--line-2); }
+.pipe-line i { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); transition: width .8s var(--ease); }
+.packet { position: absolute; top: -5px; width: 12px; height: 12px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 18px var(--cyan); transition: left .8s var(--ease); }
+.stage-btn { position: relative; background: none; border: 0; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.stage-btn .node { width: 88px; height: 88px; border-radius: 24px; background: var(--panel); border: 1px solid var(--line-2); display: grid; place-items: center; transition: all .4s var(--ease); }
+.stage-btn .node svg { width: 38px; height: 38px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s; }
+.stage-btn.on .node { border-color: var(--accent); background: rgba(76,158,255,.14); transform: scale(1.08); box-shadow: 0 0 40px rgba(76,158,255,.25); }
+.stage-btn.on .node svg { stroke: var(--accent); }
+.stage-btn .lbl { font-size: 24px; font-weight: 600; }
+.stage-btn .sub { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+.pipe-detail { padding: 34px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; min-height: 290px; }
+.pipe-detail h3 { margin: 0 0 12px; font-size: 38px; letter-spacing: -.02em; }
+.pipe-detail p { margin: 0; font-size: 22px; line-height: 1.5; color: var(--muted); }
+.pipe-detail .console { font-family: var(--mono); font-size: 17px; line-height: 1.8; background: #0b1015; border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; }
+.pipe-detail .console .c { color: var(--accent); } .pipe-detail .console .g { color: var(--green); } .pipe-detail .console .a { color: var(--amber); } .pipe-detail .console .d { color: var(--dim); }
+.fade-swap { animation: swap .5s var(--ease); }
+@keyframes swap { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* 5 negotiate */
+.neg { display: grid; grid-template-columns: 1fr 1.15fr; gap: 26px; flex: 1; min-height: 0; }
+.chat { padding: 22px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+.msgs { flex: 1; display: flex; flex-direction: column; gap: 12px; overflow: hidden; justify-content: flex-end; }
+.msg { max-width: 88%; font-size: 19px; line-height: 1.45; padding: 12px 16px; border-radius: 14px; animation: rise2 .45s var(--ease) forwards; opacity: 0; }
+.msg.me { align-self: flex-end; background: rgba(76,158,255,.18); }
+.msg.ai { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); color: var(--text); }
+.typing { display: inline-flex; gap: 5px; } .typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: blink 1s infinite; } .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+.sugg { display: flex; flex-wrap: wrap; gap: 8px; }
+.sugg .chip { font-size: 16px; padding: 8px 14px; }
+.proposal { padding: 0; display: flex; flex-direction: column; min-height: 0; }
+.proposal header { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+.proposal .status { font-family: var(--mono); font-size: 14px; letter-spacing: .12em; }
+.proposal .body { padding: 18px 22px; flex: 1; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.diff { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; opacity: 0; animation: rise2 .5s var(--ease) forwards; }
+.diff .op { font-family: var(--mono); width: 26px; height: 26px; flex: none; border-radius: 6px; display: grid; place-items: center; font-size: 16px; border: 1px solid; }
+.op.add { color: var(--green); border-color: rgba(61,214,140,.4); background: rgba(61,214,140,.1); }
+.op.chg { color: var(--amber); border-color: rgba(242,163,58,.4); background: rgba(242,163,58,.1); }
+.op.rem { color: var(--red); border-color: rgba(242,85,90,.4); background: rgba(242,85,90,.1); }
+.diff small { display: block; font-family: var(--mono); font-size: 14px; color: var(--dim); margin-top: 3px; }
+.diff .strike { text-decoration: line-through; color: var(--muted); }
+.proposal footer { display: flex; gap: 12px; padding: 16px 22px; border-top: 1px solid var(--line); align-items: center; }
+.version { font-family: var(--mono); font-size: 16px; padding: 6px 12px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--line-2); transition: all .4s var(--ease); }
+.version.bump { border-color: var(--green); color: var(--green); transform: scale(1.12); }
+.log { font-family: var(--mono); font-size: 14px; color: var(--dim); display: flex; flex-direction: column; gap: 4px; margin-left: auto; text-align: right; }
+
+/* 6 today */
+.today { display: grid; grid-template-columns: 1.55fr 1fr; gap: 26px; flex: 1; min-height: 0; }
+.dayline { padding: 20px 22px; display: flex; flex-direction: column; gap: 8px; min-height: 0; position: relative; }
+.blk { display: grid; grid-template-columns: 92px 1fr auto; gap: 14px; align-items: center; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); transition: all .55s var(--ease); font-size: 19px; }
+.blk .time { font-family: var(--mono); font-size: 15px; color: var(--muted); }
+.blk.class { background: transparent; border-style: dashed; color: var(--dim); }
+.blk.dim { opacity: .18; filter: grayscale(1); }
+.blk.done .ttl { text-decoration: line-through; color: var(--muted); }
+.blk.leaving { transform: translateX(80px); opacity: 0; }
+.blk .acts { display: flex; gap: 6px; }
+.blk .acts button { font-size: 14px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); color: var(--muted); }
+.blk .acts button:hover { color: var(--text); border-color: var(--muted); }
+.blk .acts button.done-b:hover { border-color: var(--green); color: var(--green); }
+.nowline { position: absolute; left: 12px; right: 12px; height: 2px; background: var(--accent); box-shadow: 0 0 12px var(--accent); transition: top 1s var(--ease); pointer-events: none; }
+.nowline::before { content: "NOW"; position: absolute; left: 0; top: -18px; font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .14em; }
+.side { display: flex; flex-direction: column; gap: 18px; min-height: 0; }
+.brief { padding: 22px 24px; background: linear-gradient(135deg, rgba(76,158,255,.14), var(--panel) 60%); border-color: rgba(76,158,255,.35); }
+.brief .h { font-size: 28px; font-weight: 640; letter-spacing: -.02em; margin: 8px 0; }
+.brief p { margin: 0; font-size: 18px; line-height: 1.5; color: var(--muted); }
+.seg { display: flex; gap: 6px; }
+.seg button { flex: 1; font-size: 15px; padding: 9px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel-2); color: var(--muted); }
+.seg button[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: rgba(76,158,255,.14); }
+.tomorrow { padding: 18px 22px; flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.tomorrow .it { font-size: 17px; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(76,158,255,.35); background: rgba(76,158,255,.08); display: flex; gap: 10px; align-items: center; animation: rise2 .6s var(--ease) forwards; opacity: 0; }
+.toast { position: absolute; right: 26px; bottom: 26px; width: 420px; padding: 18px 20px; border-radius: 16px; background: #111820; border: 1px solid var(--accent); box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 6px rgba(76,158,255,.08); transform: translateY(30px) scale(.96); opacity: 0; pointer-events: none; transition: all .5s var(--ease); z-index: 5; }
+.toast.show { transform: none; opacity: 1; pointer-events: auto; }
+.toast .t { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: .14em; }
+.toast .b { font-size: 19px; margin: 8px 0 14px; }
+.toast .row { display: flex; gap: 8px; }
+.toast .row button { font-size: 15px; padding: 8px 14px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel-2); }
+.toast .row button:first-child { background: var(--accent); color: #06101c; border: 0; font-weight: 600; }
+
+/* 7 command */
+.cc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.stat { padding: 20px 22px; }
+.stat .k { font-family: var(--mono); font-size: 13px; letter-spacing: .14em; color: var(--dim); text-transform: uppercase; }
+.stat .v { font-family: var(--mono); font-size: 52px; font-weight: 600; margin-top: 6px; letter-spacing: -.02em; }
+.stat .s { font-size: 15px; color: var(--muted); }
+.cc2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; flex: 1; min-height: 0; }
+.health { padding: 8px 0; }
+.hrow { display: grid; grid-template-columns: 14px 1fr 130px 180px 60px; gap: 16px; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--line); font-size: 19px; }
+.hrow:last-child { border-bottom: 0; }
+.hrow .dot { width: 12px; height: 12px; border-radius: 50%; }
+.hp { font-size: 14px; padding: 4px 10px; border-radius: 999px; border: 1px solid; text-align: center; font-weight: 500; transition: all .5s; }
+.hp.ok { color: var(--green); border-color: rgba(61,214,140,.35); background: rgba(61,214,140,.08); }
+.hp.risk { color: var(--amber); border-color: rgba(242,163,58,.35); background: rgba(242,163,58,.08); }
+.hp.off { color: var(--red); border-color: rgba(242,85,90,.35); background: rgba(242,85,90,.08); }
+.bar { height: 8px; border-radius: 5px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: 5px; transition: width 1.4s var(--ease); }
+.risks { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.risk { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; background: var(--panel-2); border-left: 3px solid var(--red); font-size: 17px; transition: all .5s var(--ease); }
+.risk.med { border-left-color: var(--amber); }
+.risk.fixed { border-left-color: var(--green); background: rgba(61,214,140,.06); }
+.risk small { display: block; font-family: var(--mono); font-size: 13px; color: var(--dim); margin-top: 3px; }
+.risk button { margin-left: auto; font-size: 14px; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); flex: none; }
+.risk.fixed button { border-color: var(--green); color: var(--green); }
+.spark { padding: 16px 20px 8px; }
+
+/* 8 ontology */
+.onto { display: grid; grid-template-columns: .8fr 1.6fr; gap: 30px; flex: 1; min-height: 0; }
+#graph { width: 100%; height: 100%; display: block; cursor: grab; border-radius: 18px; }
+.legend { display: flex; flex-direction: column; gap: 12px; }
+.legend div { display: flex; align-items: center; gap: 12px; font-size: 20px; color: var(--muted); }
+.legend i { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+.legend i.dia { border-radius: 2px; transform: rotate(45deg); width: 12px; height: 12px; }
+#nodeInfo { font-size: 18px; line-height: 1.5; min-height: 110px; padding: 18px 20px; }
+
+/* 9 architecture */
+#arch { width: 100%; flex: 1; min-height: 0; }
+#arch .box rect { fill: var(--panel); stroke: var(--line-2); transition: all .3s; }
+#arch .box:hover rect, #arch .box.on rect { stroke: var(--accent); fill: #121c26; }
+#arch text { fill: var(--text); font-family: var(--sans); }
+#arch .sub { fill: var(--dim); font-family: var(--mono); font-size: 13px; }
+#arch .wire { stroke: var(--line-2); stroke-width: 2; fill: none; }
+#archInfo { font-size: 20px; color: var(--muted); min-height: 30px; }
+
+/* 10 principles */
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; }
+.vs .col { padding: 30px 34px; display: flex; flex-direction: column; gap: 18px; transition: all .5s var(--ease); }
+.vs .col h3 { margin: 0; font-family: var(--mono); font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); font-weight: 500; }
+.vs .row { display: flex; gap: 16px; align-items: flex-start; font-size: 22px; line-height: 1.4; }
+.vs .row .ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; flex: none; font-family: var(--mono); font-size: 16px; }
+.vs .bad .ic { background: rgba(242,85,90,.12); color: var(--red); }
+.vs .good .ic { background: rgba(61,214,140,.12); color: var(--green); }
+.vs .good { border-color: rgba(76,158,255,.4); box-shadow: 0 0 80px rgba(76,158,255,.08); }
+.vs .bad .row { color: var(--muted); }
+
+/* 11 roadmap */
+.road { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.road::before { content: ""; position: absolute; left: 0; right: 0; top: 29px; height: 2px; background: linear-gradient(90deg, var(--green) 0 18%, var(--line-2) 18%); }
+.phase { background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 14px; }
+.phase .pin { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--line-2); background: var(--bg); font-family: var(--mono); font-size: 18px; position: relative; transition: all .35s var(--ease); }
+.phase.done .pin { border-color: var(--green); color: var(--green); box-shadow: 0 0 30px rgba(61,214,140,.3); }
+.phase.on .pin { border-color: var(--accent); color: var(--accent); transform: scale(1.12); }
+.phase .name { font-size: 24px; font-weight: 620; }
+.phase .when { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+.road-detail { padding: 30px 36px; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.road-detail h3 { margin: 0 0 8px; font-size: 36px; letter-spacing: -.02em; }
+.road-detail ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.road-detail li { font-size: 21px; line-height: 1.4; padding-left: 26px; position: relative; color: var(--text); }
+.road-detail li::before { content: ""; position: absolute; left: 0; top: 10px; width: 10px; height: 10px; border-radius: 3px; background: var(--accent); }
+.road-detail .done-li li::before { background: var(--green); }
+.road-detail .goal { font-size: 22px; color: var(--muted); line-height: 1.5; }
+
+/* 12 close */
+#s12 { justify-content: center; align-items: flex-start; }
+#s12 canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#s12 .content { position: relative; display: flex; flex-direction: column; gap: 30px; }
+#s12 h1 { font-size: 112px; }
+.numbers { display: flex; gap: 60px; margin-top: 10px; }
+.numbers div b { display: block; font-family: var(--mono); font-size: 56px; font-weight: 600; letter-spacing: -.02em; }
+.numbers div span { font-size: 18px; color: var(--muted); }
+</style>
+
+<div id="viewport">
+  <div id="stage">
+    <div class="bg-grid"></div>
+
+    <!-- 0 · Title -->
+    <section class="slide active" id="s0" data-title="Momentum" data-notes="Hi, I'm Sherbaz. This is Momentum. The idea is simple: run your life like an operation. Move your mouse over the background: every dot is a goal, a task, a commitment or a deadline, and the lines are how they connect. Most people run their lives with no system. Momentum is the system.">
+      <canvas id="net0"></canvas>
+      <div class="content">
+        <span class="pill-live in" style="--d:0"><span class="blink"></span>GDG PROJECT SHOWCASE · 2026</span>
+        <div class="eyebrow in" style="--d:1;font-size:18px;color:var(--text)">Momentum</div>
+        <h1 class="in" style="--d:1">Run your life like an <span class="grad">operation.</span></h1>
+        <p class="lede in" style="--d:2;font-size:32px">An AI chief of staff for your whole life: career, health, money, learning. It turns ambitions into today's plan, and keeps you on it.</p>
+        <div class="meta-row in" style="--d:3"><span>SHERBAZ RIASAT</span><span>SOLO BUILD</span><span>NEXT.JS · GEMINI · SUPABASE</span></div>
+        <div class="hint in" style="--d:5">PRESS <b>→</b> OR <b>SPACE</b> TO BEGIN · <b>O</b> OVERVIEW · <b>N</b> NOTES · <b>F</b> FULLSCREEN</div>
+      </div>
+    </section>
+
+    <!-- 1 · Problem -->
+    <section class="slide" id="s1" data-title="The problem" data-notes="Press the button. This is what ambition looks like for most people: career, health, money, learning, side projects, all competing, none scheduled. Momentum takes the same goals and gives each one a place in time. Click it again to go back to chaos.">
+      <div class="eyebrow in" style="--d:0">The problem</div>
+      <h2 class="in" style="--d:1">Ambitious people don't lack goals. They lack a system, and someone to answer to.</h2>
+      <div class="chaos-row in" style="--d:2">
+        <button class="btn" id="orderBtn">Give it structure</button>
+        <span class="chaos-stat" id="chaosStat">Plan status: <b>no timeline · no next step · nobody checking</b></span>
+      </div>
+      <div id="chaosField" class="in" style="--d:3">
+        <div class="col-head" style="left:3%">This year</div>
+        <div class="col-head" style="left:28%">This month</div>
+        <div class="col-head" style="left:53%">This week</div>
+        <div class="col-head" style="left:78%">Today</div>
+      </div>
+    </section>
+
+    <!-- 2 · Users -->
+    <section class="slide" id="s2" data-title="Who it's for" data-notes="Click each card. Momentum isn't for one type of person. It's for anyone running a full life: a student, a young professional, a builder with a side project. The system is the same; only the goals change.">
+      <div class="eyebrow in" style="--d:0">Who it's for</div>
+      <h2 class="in" style="--d:1">Built for anyone running a full life.</h2>
+      <div class="personas">
+        <button class="card persona in" style="--d:2" aria-expanded="false"><span class="glow"></span>
+          <span class="tag">01 · THE STUDENT</span><span class="big">Classes, clubs, career prep</span>
+          <span class="wants">Wants a clear path from “internship by summer” to what to do on Tuesday.</span>
+          <span class="meter" title="Clarity today"><i style="--w:28%"></i></span>
+          <span class="quote">“I know what I want. I just never know what to do next.”</span>
+        </button>
+        <button class="card persona in" style="--d:3" aria-expanded="false"><span class="glow"></span>
+          <span class="tag">02 · THE PROFESSIONAL</span><span class="big">Job, gym, money, family</span>
+          <span class="wants">Wants the promotion, the fitness and the savings goal, without dropping any of them by March.</span>
+          <span class="meter" title="Follow-through"><i style="--w:35%"></i></span>
+          <span class="quote">“I set goals every January. By February nobody's checking, including me.”</span>
+        </button>
+        <button class="card persona in" style="--d:4" aria-expanded="false"><span class="glow"></span>
+          <span class="tag">03 · THE BUILDER</span><span class="big">Day job plus a side project</span>
+          <span class="wants">Wants a plan that fits the 10 hours a week they actually have after work.</span>
+          <span class="meter" title="Free hours"><i style="--w:18%"></i></span>
+          <span class="quote">“Every planner assumes I have infinite time. I have evenings and Saturday mornings.”</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 3 · Live breakdown -->
+    <section class="slide" id="s3" data-title="Try it: break down a goal" data-notes="This one's live. Type any life goal, money, health, career, learning, or tap a preset, and hit Break it down. You get the ladder: phases, weekly milestones, and the three tasks for today, tiered P1, P2, P3. The real app does this with Gemini around your actual calendar.">
+      <div class="eyebrow in" style="--d:0">Try it live</div>
+      <h2 class="in" style="--d:1;font-size:56px">Any goal in. An operation out.</h2>
+      <form class="bd-form in" style="--d:2" id="bdForm">
+        <input id="bdInput" autocomplete="off" value="Save $5,000 for an emergency fund by December" aria-label="Your goal">
+        <button class="btn" type="submit">Break it down →</button>
+      </form>
+      <div class="bd-presets in" style="--d:3">
+        <button class="chip" data-goal="Get promoted to senior engineer this year">Get promoted</button>
+        <button class="chip" data-goal="Run my first 10K in November">Run a 10K</button>
+        <button class="chip" data-goal="Launch my side project and get 100 users">Launch a side project</button>
+        <button class="chip" data-goal="Speak conversational Spanish by May">Learn Spanish</button>
+        <button class="chip" data-goal="Land a software engineering internship by summer">Land an internship</button>
+      </div>
+      <div class="ladder in" style="--d:4" id="ladder"></div>
+    </section>
+
+    <!-- 4 · Pipeline -->
+    <section class="slide" id="s4" data-title="How it works" data-notes="This is the operating loop. Click any stage, or just watch it cycle. Interview, negotiate, execute, remind, adapt. Each stage has a clear job, and the console on the right shows what the system actually does.">
+      <div class="eyebrow in" style="--d:0">How it works</div>
+      <h2 class="in" style="--d:1">The operating loop: from “I want to…” to what you do at 7 pm on Tuesday.</h2>
+      <div class="pipe in" style="--d:2" id="pipe">
+        <div class="pipe-line"><i id="pipeFill"></i><span class="packet" id="packet"></span></div>
+      </div>
+      <div class="card pipe-detail in" style="--d:3" id="pipeDetail"></div>
+    </section>
+
+    <!-- 5 · Negotiate -->
+    <section class="slide" id="s5" data-title="AI proposes, you decide" data-notes="Tap a suggestion. The AI never changes your plan silently. It sends a proposal, line by line, with a reason. Approve it and the plan version goes up and it's logged. Reject it and nothing changes.">
+      <div class="eyebrow in" style="--d:0">Negotiation</div>
+      <h2 class="in" style="--d:1">The AI proposes. You decide.</h2>
+      <div class="neg in" style="--d:2">
+        <div class="card chat">
+          <div class="msgs" id="msgs">
+            <div class="msg ai" style="opacity:1">Here's your plan: 4 goals across career, health, money and your side project. 12.5 h a week against your 14 h. Push back on anything.</div>
+          </div>
+          <div class="sugg" id="sugg">
+            <button class="chip" data-k="midterms">November is crunch at work, lighten it</button>
+            <button class="chip" data-k="sick">I'm sick until Wednesday</button>
+            <button class="chip" data-k="weekend">Move my runs to mornings</button>
+          </div>
+        </div>
+        <div class="card proposal">
+          <header><span class="eyebrow" style="font-size:13px">Proposal</span><span class="status" id="propStatus" style="color:var(--dim)">WAITING FOR YOU</span></header>
+          <div class="body" id="propBody"><p style="color:var(--dim);font-size:19px;margin:0">Pick a request on the left. The proposed changes appear here, one line per change, each with a reason.</p></div>
+          <footer>
+            <button class="btn" id="approveBtn" disabled style="opacity:.4">Approve</button>
+            <button class="btn ghost" id="rejectBtn" disabled style="opacity:.4">Reject</button>
+            <span class="version" id="ver">plan v1</span>
+            <div class="log" id="log"></div>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · Today -->
+    <section class="slide" id="s6" data-title="Today" data-notes="This is a real day for Alex: a full-time job, a gym habit, a savings goal and a side project. Filter by tier, mark something done, or skip it and watch it move to tomorrow. Switch the coach personality and the morning brief rewrites itself. Hit Simulate reminder to see the push.">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:30px" class="in">
+        <div><div class="eyebrow">Execution</div><h2 style="font-size:56px;margin-top:10px">Every day, run around your real commitments.</h2></div>
+        <div style="display:flex;gap:10px;flex:none">
+          <button class="chip" data-tier="all" aria-pressed="true">All</button>
+          <button class="chip" data-tier="1">P1</button>
+          <button class="chip" data-tier="2">P2</button>
+          <button class="chip" data-tier="3">P3</button>
+          <button class="btn" id="remindBtn" style="font-size:16px;padding:10px 18px">Simulate reminder</button>
+        </div>
+      </div>
+      <div class="today in" style="--d:2">
+        <div class="card dayline" id="dayline"><div class="nowline" id="nowline"></div></div>
+        <div class="side">
+          <div class="card brief">
+            <div class="eyebrow" style="font-size:12px">Morning brief</div>
+            <div class="h" id="briefH">Let's go, Alex.</div>
+            <p id="briefB"></p>
+            <div class="seg" style="margin-top:14px" id="coachSeg">
+              <button data-c="gentle">Gentle</button><button data-c="coach" aria-pressed="true">Coach</button><button data-c="drill">Drill sergeant</button>
+            </div>
+          </div>
+          <div class="card tomorrow" id="tomorrow">
+            <div class="eyebrow" style="font-size:12px">Tomorrow · auto-replanned</div>
+            <div id="tmList" style="display:flex;flex-direction:column;gap:8px"><p style="margin:0;color:var(--dim);font-size:17px">Skip a block on the left and it lands here.</p></div>
+          </div>
+        </div>
+        <div class="toast" id="toast">
+          <div class="t">UP NEXT · 19:00–19:45</div>
+          <div class="b">Spanish lesson with tutor · <span style="color:var(--accent)">P1</span></div>
+          <div class="row"><button data-t="start">Start</button><button data-t="snooze">Snooze 15m</button><button data-t="close">Skip</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Command Center -->
+    <section class="slide" id="s7" data-title="Command Center" data-notes="This is the operations room for your life. The Command Center shows whether each goal is on track, from planned versus completed work. Risks show up by themselves. Click Fix and it drafts the smallest re-plan, and the goal's status updates.">
+      <div class="eyebrow in" style="--d:0">Command Center</div>
+      <h2 class="in" style="--d:1;font-size:56px">The operations room for your life.</h2>
+      <div class="cc in" style="--d:2">
+        <div class="card stat"><div class="k">Goals on track</div><div class="v" id="ccOn" style="color:var(--amber)">1/3</div><div class="s">live from the plan</div></div>
+        <div class="card stat"><div class="k">Execution · 14d</div><div class="v" data-count="84" data-suffix="%" style="color:var(--green)">0%</div><div class="s">planned minutes done</div></div>
+        <div class="card stat"><div class="k">P1 hit rate</div><div class="v" data-count="91" data-suffix="%" style="color:var(--green)">0%</div><div class="s">last 14 days</div></div>
+        <div class="card stat"><div class="k">Streak</div><div class="v" data-count="12" data-suffix="d">0d</div><div class="s">days with a task done</div></div>
+      </div>
+      <div class="cc2 in" style="--d:3">
+        <div class="card health" id="health"></div>
+        <div class="card risks" id="risks"></div>
+      </div>
+    </section>
+
+    <!-- 8 · Ontology -->
+    <section class="slide" id="s8" data-title="The ontology" data-notes="Grab a node and drag it. Everything in your life becomes an object that links to others: you, goals, milestones, tasks, and your fixed commitments like work and family. The AI, the scheduler and the dashboard all read the same model, so nothing drifts out of sync.">
+      <div class="onto">
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <div class="eyebrow in" style="--d:0">The ontology</div>
+          <h2 class="in" style="--d:1;font-size:58px">Your life, modeled as objects that link.</h2>
+          <div class="legend in" style="--d:2">
+            <div><i style="background:var(--text)"></i>You</div>
+            <div><i style="background:var(--accent)"></i>Goals</div>
+            <div><i class="dia" style="background:var(--amber)"></i>Milestones</div>
+            <div><i style="background:var(--violet);width:9px;height:9px"></i>Tasks</div>
+            <div><i style="background:var(--cyan)"></i>Commitments</div>
+          </div>
+          <div class="card in" style="--d:3" id="nodeInfo"><span style="color:var(--dim)">Drag any node. Hover to inspect it.</span></div>
+        </div>
+        <div class="card in" style="--d:2;position:relative;overflow:hidden"><canvas id="graph"></canvas></div>
+      </div>
+    </section>
+
+    <!-- 9 · Architecture -->
+    <section class="slide" id="s9" data-title="Architecture" data-notes="Hover each box. The key design choice: language models are great at understanding people and bad at calendar math. So Gemini handles the interview, the plan and the conversation, and a tested, deterministic scheduler places every block.">
+      <div class="eyebrow in" style="--d:0">Under the hood</div>
+      <h2 class="in" style="--d:1;font-size:56px">AI at the edges. A deterministic core.</h2>
+      <svg id="arch" class="in" style="--d:2" viewBox="0 0 1380 470" role="img" aria-label="Architecture: you use the Next.js app, which talks to Gemini through a server route, a deterministic scheduler, local storage or Supabase, and notifications"></svg>
+      <div id="archInfo" class="in" style="--d:3">Hover a component to see what it does.</div>
+    </section>
+
+    <!-- 10 · Principles -->
+    <section class="slide" id="s10" data-title="Why it's different" data-notes="Here's the difference in one picture. Planners assume you know the steps. Habit apps don't know the bigger goal. Chatbots forget. Momentum plans, schedules, reminds and adapts, and never changes anything without you.">
+      <div class="eyebrow in" style="--d:0">Why it's different</div>
+      <h2 class="in" style="--d:1">Other tools track your life. Momentum runs it with you.</h2>
+      <div class="vs in" style="--d:2">
+        <div class="card col bad">
+          <h3>Planners, habit apps, chatbots</h3>
+          <div class="row"><span class="ic">✕</span>You have to already know the steps</div>
+          <div class="row"><span class="ic">✕</span>Habits with no link to the bigger goal</div>
+          <div class="row"><span class="ic">✕</span>Ignore your calendar and the hours you really have</div>
+          <div class="row"><span class="ic">✕</span>Chatbots forget, and change things silently</div>
+          <div class="row"><span class="ic">✕</span>Miss a day and the plan just breaks</div>
+        </div>
+        <div class="card col good">
+          <h3 style="color:var(--accent)">Momentum</h3>
+          <div class="row"><span class="ic">✓</span>Interviews you, then writes the steps</div>
+          <div class="row"><span class="ic">✓</span>Every task rolls up to a goal in one life-wide plan</div>
+          <div class="row"><span class="ic">✓</span>Schedules around work and life, inside your weekly hours</div>
+          <div class="row"><span class="ic">✓</span>Every change is a proposal, versioned and logged</div>
+          <div class="row"><span class="ic">✓</span>Missed work rolls forward; optional work drops first</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · Roadmap -->
+    <section class="slide" id="s11" data-title="Roadmap" data-notes="Phase one is built and working today. Click through the phases. Next up is accounts and push reminders that arrive even when the app is closed, then smarter planning, the gym-buddy social layer, and native apps.">
+      <div class="eyebrow in" style="--d:0">Roadmap</div>
+      <h2 class="in" style="--d:1;font-size:56px">From MVP to the operating system for your life.</h2>
+      <div class="road in" style="--d:2" id="road"></div>
+      <div class="card road-detail in" style="--d:3" id="roadDetail"></div>
+    </section>
+
+    <!-- 12 · Close -->
+    <section class="slide" id="s12" data-title="Thank you" data-notes="Thank you. Happy to show the live app now: interview, plan, today, Command Center. Questions?">
+      <canvas id="net12"></canvas>
+      <div class="content">
+        <span class="pill-live in" style="--d:0"><span class="blink"></span>LIVE DEMO NEXT</span>
+        <h1 class="in" style="--d:1">Your life is the biggest<br>operation you'll ever <span class="grad">run.</span></h1>
+        <p class="lede in" style="--d:2">Ten minutes of questions. A plan you both agree on. A chief of staff that doesn't let you drift.</p>
+        <div class="numbers in" style="--d:3">
+          <div><b data-count="11">0</b><span>questions to a full profile</span></div>
+          <div><b data-count="3">0</b><span>priority tiers every day</span></div>
+          <div><b data-count="0">0</b><span>silent AI changes</span></div>
+          <div><b data-count="11">0</b><span>automated tests passing</span></div>
+        </div>
+        <div class="hint in" style="--d:5">THANK YOU · QUESTIONS? · SHERBAZ RIASAT</div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<header id="topbar">
+  <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#0f1419" stroke="#2a3642" stroke-width="3"/><path d="M14 44 L26 28 L36 36 L50 18" fill="none" stroke="#4c9eff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="50" cy="18" r="5" fill="#2fd3d0"/></svg>Momentum</div>
+  <div id="slideTitle" class="hide-sm"></div>
+</header>
+
+<nav id="bottombar" aria-label="Slide controls">
+  <button class="ctrl" id="prevBtn" aria-label="Previous slide"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <span id="counter">01 / 13</span>
+  <button class="ctrl" id="nextBtn" aria-label="Next slide"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+  <div class="dots" id="dots"></div>
+  <button class="ctrl hide-sm" id="ovBtn" aria-label="Overview (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+  <button class="ctrl" id="notesBtn" aria-label="Speaker notes (N)"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></button>
+  <button class="ctrl hide-sm" id="fsBtn" aria-label="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button class="ctrl hide-sm" id="helpBtn" aria-label="Keyboard shortcuts (?)">?</button>
+</nav>
+<div id="progress"><i></i></div>
+
+<div class="overlay" id="overview" hidden><div class="grid" id="ovGrid"></div></div>
+<aside id="notes" hidden><div class="eyebrow">Speaker notes</div><div id="notesText"></div></aside>
+<div class="overlay" id="help" hidden>
+  <div class="card">
+    <div class="eyebrow" style="margin-bottom:12px">Keyboard</div>
+    <table>
+      <tr><td><kbd>→</kbd> <kbd>Space</kbd></td><td>Next slide</td></tr>
+      <tr><td><kbd>←</kbd></td><td>Previous slide</td></tr>
+      <tr><td><kbd>Home</kbd> <kbd>End</kbd></td><td>First / last slide</td></tr>
+      <tr><td><kbd>O</kbd></td><td>Overview of all slides</td></tr>
+      <tr><td><kbd>N</kbd></td><td>Speaker notes</td></tr>
+      <tr><td><kbd>F</kbd></td><td>Fullscreen</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Close panels</td></tr>
+    </table>
+    <p style="color:var(--dim);font-size:14px;margin:14px 0 0">Swipe left and right on touch screens.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const slides = $$(".slide");
+  const N = slides.length;
+  let cur = -1;
+  const onEnter = {}; // slide index -> fn
+  const onLeave = {};
+
+  // ---------- Scale stage ----------
+  const stage = $("#stage");
+  let scale = 1;
+  const vp = document.getElementById("viewport");
+  function fit() {
+    const vw = vp.clientWidth || innerWidth || 1280;
+    let vh = (innerHeight || 0) - 56;
+    if (vh < 200) { vh = vw * 9 / 16; vp.style.height = (vh + 56) + "px"; } else { vp.style.height = ""; }
+    scale = Math.max(0.1, Math.min(vw / 1600, vh / 900));
+    stage.style.transform = `scale(${scale})`;
+  }
+  addEventListener("resize", fit); fit();
+
+  // ---------- Navigation ----------
+  const dots = $("#dots");
+  slides.forEach((s, i) => { const b = document.createElement("button"); b.setAttribute("aria-label", `Go to slide ${i + 1}: ${s.dataset.title}`); b.onclick = () => go(i); dots.appendChild(b); });
+  function go(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    if (i === cur) return;
+    if (cur >= 0) { onLeave[cur]?.(); }
+    slides.forEach((s, k) => { s.classList.toggle("active", k === i); s.classList.toggle("past", k < i); s.setAttribute("aria-hidden", k === i ? "false" : "true"); s.inert = k !== i; });
+    cur = i;
+    $("#counter").textContent = `${String(i + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
+    $("#slideTitle").textContent = slides[i].dataset.title;
+    $("#progress i").style.width = `${((i + 1) / N) * 100}%`;
+    $$("#dots button").forEach((d, k) => d.classList.toggle("on", k === i));
+    $("#notesText").textContent = slides[i].dataset.notes || "";
+    try { history.replaceState(null, "", `#s${i}`); } catch {}
+    onEnter[i]?.();
+    $$("[data-count]", slides[i]).forEach(countUp);
+  }
+  const next = () => go(cur + 1), prev = () => go(cur - 1);
+  $("#nextBtn").onclick = next; $("#prevBtn").onclick = prev;
+
+  function toggleOverlay(el, show) {
+    if (show === undefined) show = el.hidden;
+    if (show) { el.hidden = false; requestAnimationFrame(() => el.classList.add("show")); }
+    else { el.classList.remove("show"); setTimeout(() => (el.hidden = true), 300); }
+  }
+  // Overview
+  const ovGrid = $("#ovGrid");
+  slides.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.innerHTML = `<span class="n">${String(i + 1).padStart(2, "0")}</span><span class="t">${s.dataset.title}</span>`;
+    b.onclick = () => { go(i); toggleOverlay($("#overview"), false); };
+    ovGrid.appendChild(b);
+  });
+  const openOverview = () => { $$("#ovGrid button").forEach((b, k) => b.classList.toggle("on", k === cur)); toggleOverlay($("#overview")); };
+  $("#ovBtn").onclick = openOverview;
+  $("#overview").onclick = (e) => { if (e.target.id === "overview") toggleOverlay($("#overview"), false); };
+  $("#notesBtn").onclick = () => ($("#notes").hidden = !$("#notes").hidden);
+  $("#helpBtn").onclick = () => toggleOverlay($("#help"));
+  $("#help").onclick = () => toggleOverlay($("#help"), false);
+  const fullscreen = () => { try { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(() => {}); } catch {} };
+  $("#fsBtn").onclick = fullscreen;
+
+  addEventListener("keydown", (e) => {
+    if (e.target.matches("input, textarea")) { if (e.key === "Escape") e.target.blur(); return; }
+    const k = e.key;
+    if (["ArrowRight", "PageDown", " "].includes(k)) { e.preventDefault(); next(); }
+    else if (["ArrowLeft", "PageUp"].includes(k)) { e.preventDefault(); prev(); }
+    else if (k === "Home") go(0); else if (k === "End") go(N - 1);
+    else if (k === "o" || k === "O") openOverview();
+    else if (k === "n" || k === "N") $("#notes").hidden = !$("#notes").hidden;
+    else if (k === "f" || k === "F") fullscreen();
+    else if (k === "?") toggleOverlay($("#help"));
+    else if (k === "Escape") { if (!$("#overview").hidden) toggleOverlay($("#overview"), false); if (!$("#help").hidden) toggleOverlay($("#help"), false); $("#notes").hidden = true; }
+  });
+  // Swipe
+  let sx = null, sy = null;
+  addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  addEventListener("touchend", (e) => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest("canvas")) dx < 0 ? next() : prev();
+    sx = null;
+  });
+
+  // ---------- Count-up ----------
+  function countUp(el) {
+    const to = +el.dataset.count, suf = el.dataset.suffix || "";
+    if (reduce) { el.textContent = to + suf; return; }
+    const t0 = performance.now();
+    const step = (t) => { const p = Math.min(1, (t - t0) / 1400); const e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(to * e) + suf; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+
+  // ---------- Network canvases (title + close) ----------
+  function network(canvas, density) {
+    const ctx = canvas.getContext("2d");
+    let pts = [], raf = 0, running = false;
+    const mouse = { x: -9999, y: -9999 };
+    const W = 1600, H = 900, dpr = Math.min(2, devicePixelRatio || 1);
+    canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(W * H * density);
+    pts = Array.from({ length: n }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, hub: i % 10 === 0, ph: Math.random() * 6 }));
+    canvas.parentElement.addEventListener("pointermove", (e) => { const r = canvas.getBoundingClientRect(); mouse.x = (e.clientX - r.left) / r.width * W; mouse.y = (e.clientY - r.top) / r.height * H; });
+    canvas.parentElement.addEventListener("pointerleave", () => { mouse.x = mouse.y = -9999; });
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        const dx = mouse.x - p.x, dy = mouse.y - p.y, d = Math.hypot(dx, dy);
+        if (d < 220) { p.vx += dx * .00002; p.vy += dy * .00002; }
+        p.x += p.vx; p.y += p.vy; p.vx *= .998; p.vy *= .998;
+        if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20; if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+      }
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+        const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < 150) {
+          const near = Math.hypot(mouse.x - a.x, mouse.y - a.y) < 200;
+          ctx.strokeStyle = near ? `rgba(76,158,255,${.6 * (1 - d / 150)})` : `rgba(138,153,167,${.16 * (1 - d / 150)})`;
+          ctx.lineWidth = near ? 1.2 : .7; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+      for (const p of pts) {
+        const pu = p.hub ? .6 + .4 * Math.sin(t / 600 + p.ph) : 1;
+        ctx.fillStyle = p.hub ? `rgba(47,211,208,${pu})` : "rgba(221,228,234,.5)";
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.hub ? 3 : 1.5, 0, 7); ctx.fill();
+        if (p.hub) { ctx.strokeStyle = `rgba(47,211,208,${.25 * pu})`; ctx.beginPath(); ctx.arc(p.x, p.y, 9 + 4 * pu, 0, 7); ctx.stroke(); }
+      }
+      if (running) raf = requestAnimationFrame(draw);
+    }
+    return { start() { if (running) return; running = true; raf = requestAnimationFrame(draw); if (reduce) { running = false; } }, stop() { running = false; cancelAnimationFrame(raf); } };
+  }
+  const net0 = network($("#net0"), .00007), net12 = network($("#net12"), .00005);
+  onEnter[0] = () => net0.start(); onLeave[0] = () => net0.stop();
+  onEnter[12] = () => net12.start(); onLeave[12] = () => net12.stop();
+
+  // ---------- 1 · Chaos to order ----------
+  const GOALS = [
+    ["Get promoted", 0], ["Save $5,000", 0], ["Run a 10K", 0], ["Launch side project", 0],
+    ["Lead one big project", 1], ["$420 saved this month", 1], ["Running 3x a week", 1], ["Landing page live", 1],
+    ["Ship the Q4 deck", 2], ["Cancel 2 subscriptions", 2], ["Interval session", 2], ["Interview 5 users", 2],
+    ["Deep work: 90 min", 3], ["Move $150 to savings", 3], ["25-min easy run", 3], ["Call Mom", 3],
+  ];
+  const field = $("#chaosField");
+  const chips = GOALS.map(([t, c]) => { const el = document.createElement("div"); el.className = "gchip"; el.textContent = t; el.dataset.col = c; field.appendChild(el); return el; });
+  let ordered = false, chaosRaf = 0, chaosT = 0;
+  const seeds = chips.map(() => ({ x: Math.random(), y: Math.random(), a: Math.random() * 6, s: .4 + Math.random() * .8, r: (Math.random() - .5) * 26 }));
+  function chaosFrame() {
+    if (ordered) return;
+    chaosT += .008;
+    const W = field.clientWidth, H = field.clientHeight;
+    chips.forEach((el, i) => {
+      const s = seeds[i];
+      const x = (s.x * (W - 260)) + Math.sin(chaosT * s.s + s.a) * 40;
+      const y = 20 + (s.y * (H - 80)) + Math.cos(chaosT * s.s * 1.3 + s.a) * 26;
+      el.style.transform = `translate(${x}px, ${y}px) rotate(${s.r + Math.sin(chaosT + s.a) * 6}deg)`;
+    });
+    chaosRaf = requestAnimationFrame(chaosFrame);
+  }
+  function order() {
+    ordered = true; cancelAnimationFrame(chaosRaf);
+    const W = field.clientWidth;
+    const count = [0, 0, 0, 0];
+    const colors = ["var(--accent)", "var(--amber)", "var(--violet)", "var(--cyan)"];
+    chips.forEach((el) => {
+      const c = +el.dataset.col, k = count[c]++;
+      el.style.transform = `translate(${W * (0.03 + c * 0.25)}px, ${64 + k * 64}px) rotate(0deg)`;
+      el.classList.add("ordered"); el.style.borderColor = colors[c];
+    });
+    field.classList.add("ordered");
+    $("#s1").classList.add("ordered-state");
+    $("#chaosStat").innerHTML = 'Plan status: <b>4 goals · 4 milestones · 4 tasks this week · 4 today</b>';
+    $("#orderBtn").textContent = "Back to chaos";
+  }
+  function unorder() {
+    ordered = false; field.classList.remove("ordered"); $("#s1").classList.remove("ordered-state");
+    chips.forEach((el) => { el.classList.remove("ordered"); el.style.borderColor = ""; });
+    $("#chaosStat").innerHTML = 'Plan status: <b>no timeline · no next step · nobody checking</b>';
+    $("#orderBtn").textContent = "Give it structure";
+    chaosFrame();
+  }
+  $("#orderBtn").onclick = () => (ordered ? unorder() : order());
+  onEnter[1] = () => { if (!ordered) { cancelAnimationFrame(chaosRaf); chaosFrame(); } };
+  onLeave[1] = () => cancelAnimationFrame(chaosRaf);
+
+  // ---------- 2 · Personas ----------
+  $$(".persona").forEach((p) => {
+    p.onclick = () => p.setAttribute("aria-expanded", p.getAttribute("aria-expanded") === "true" ? "false" : "true");
+    p.onpointermove = (e) => {
+      const r = p.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      p.style.setProperty("--mx", `${x * 100}%`); p.style.setProperty("--my", `${y * 100}%`);
+      if (!reduce) p.style.transform = `perspective(900px) rotateY(${(x - .5) * 8}deg) rotateX(${(.5 - y) * 8}deg)`;
+    };
+    p.onpointerleave = () => (p.style.transform = "");
+  });
+
+  // ---------- 3 · Breakdown ----------
+  const LIB = {
+    money: { re: /save|saving|\$|money|debt|budget|invest|fund/i, phases: [["See the money", "Month 1"], ["Cut & automate", "Month 2"], ["Build the fund", "Months 3–4"], ["Protect it", "Month 5"]],
+      weeks: ["Every expense tracked", "2 subscriptions cancelled", "$150 auto-transfer weekly", "$2,500 milestone"],
+      today: [["Set up a $150 weekly auto-transfer", "20 min · high energy"], ["Categorise last month's spending", "30 min"], ["Compare 2 high-yield savings accounts", "15 min · optional"]] },
+    promo: { re: /promot|senior|raise|lead|manager/i, phases: [["Clarify the bar", "Month 1"], ["Close the gaps", "Months 2–4"], ["Show the work", "Months 5–6"], ["Make the case", "Month 7"]],
+      weeks: ["Promotion criteria written down", "Own one high-visibility project", "Mentor one teammate", "Promo packet drafted"],
+      today: [["90-min deep work on the migration project", "90 min · high energy"], ["Write this week's impact notes", "20 min"], ["Book a 1:1 with your manager", "5 min · optional"]] },
+    career: { re: /intern|job|career|resume|offer/i, phases: [["Foundation", "Sep–Oct"], ["Skill building", "Oct–Dec"], ["Applications", "Jan–Feb"], ["Interviews", "Feb–Mar"]],
+      weeks: ["20 target companies listed", "Resume v1 reviewed", "Portfolio project MVP", "60 practice problems solved"],
+      today: [["Research 5 internship posts, list required skills", "60 min · high energy"], ["Rewrite one resume section with numbers", "45 min"], ["Update LinkedIn headline", "20 min · optional"]] },
+    academic: { re: /gpa|grade|exam|semester|course|pass/i, phases: [["Set up systems", "Weeks 1–3"], ["Midterm push", "Weeks 4–8"], ["Steady state", "Weeks 9–12"], ["Finals", "Weeks 13–16"]],
+      weeks: ["Every deadline in the calendar", "Office hours visited in each course", "2 timed past papers per course", "One-page summary per hard topic"],
+      today: [["MATH2471 problem set, questions 1–6", "90 min · high energy"], ["Review CS1428 lecture notes", "35 min"], ["Flashcards, 20 minutes", "20 min · optional"]] },
+    health: { re: /run|10k|5k|gym|fit|weight|marathon|health/i, phases: [["Base", "Weeks 1–3"], ["Build", "Weeks 4–7"], ["Peak", "Weeks 8–9"], ["Taper & race", "Week 10"]],
+      weeks: ["Running 3x a week", "Longest run: 6 km", "Interval session done", "Race-pace 8 km"],
+      today: [["Easy run, 25 minutes", "30 min · medium energy"], ["Full-body strength circuit", "35 min"], ["Mobility, 15 minutes", "15 min · optional"]] },
+    build: { re: /app|build|launch|startup|project|website|side/i, phases: [["Discover", "Weeks 1–2"], ["Build MVP", "Weeks 3–7"], ["Launch", "Weeks 8–9"], ["Iterate", "Weeks 10–12"]],
+      weeks: ["5 user interviews done", "Core feature working", "Deployed on a phone", "First 10 users"],
+      today: [["Build the login screen end to end", "90 min · high energy"], ["Interview one potential user", "30 min"], ["Write the README", "20 min · optional"]] },
+    language: { re: /spanish|french|language|german|arabic|japanese|fluent|speak/i, phases: [["Foundations", "Months 1–2"], ["Comprehension", "Months 3–4"], ["Speaking", "Months 5–6"], ["Fluency push", "Month 7"]],
+      weeks: ["First 150 words", "Understand a slow podcast", "First tutor conversation", "10-minute conversation"],
+      today: [["30-minute conversation with a tutor", "30 min · high energy"], ["Learn 15 new words", "20 min"], ["Shadow a 2-minute audio clip", "10 min · optional"]] },
+  };
+  function breakdown(goal) {
+    const key = Object.keys(LIB).find((k) => LIB[k].re.test(goal)) || "build";
+    const L = LIB[key];
+    const d = (i) => `style="animation-delay:${i * 110}ms"`;
+    let n = 0;
+    $("#ladder").innerHTML = `
+      <div class="card rung goal"><h3><span>Goal</span><span>01</span></h3><div class="item" ${d(n++)}>${escapeHtml(goal)}</div>
+        <div class="item" style="animation-delay:${n++ * 110}ms;font-size:17px;font-weight:400;background:var(--panel-2);border-color:var(--line)"><span>Success = <b style="color:var(--green)">${({ money: "$5,000 in the fund", promo: "New title + raise", academic: "GPA ≥ 3.5", health: "Race completed", build: "100 real users", language: "10-min conversation", career: "Offer signed" })[key]}</b></span></div></div>
+      <div class="card rung"><h3><span>Phases</span><span>${L.phases.length}</span></h3>${L.phases.map(([p, w]) => `<div class="item" ${d(n++)}><div>${p}<small>${w}</small></div></div>`).join("")}</div>
+      <div class="card rung"><h3><span>Weekly milestones</span><span>${L.weeks.length}</span></h3>${L.weeks.map((w, i) => `<div class="item" ${d(n++)}><span class="mono" style="color:var(--amber);font-size:14px;padding-top:3px">W${i * 2 + 1}</span><div>${w}</div></div>`).join("")}</div>
+      <div class="card rung"><h3><span>Today</span><span>3</span></h3>${L.today.map(([t, m], i) => `<div class="item" ${d(n++)}><span class="tier t${i + 1}">P${i + 1}</span><div>${t}<small>${m}</small></div></div>`).join("")}</div>`;
+  }
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  $("#bdForm").onsubmit = (e) => { e.preventDefault(); const v = $("#bdInput").value.trim(); if (v) breakdown(v); };
+  $$("[data-goal]").forEach((b) => (b.onclick = () => { $("#bdInput").value = b.dataset.goal; breakdown(b.dataset.goal); }));
+  breakdown($("#bdInput").value);
+
+  // ---------- 4 · Pipeline ----------
+  const ICON = {
+    chat: "M4 5h16v10H9l-5 4z", nego: "M7 7h10M7 12h6M17 14l3 3-3 3M20 17h-7", cal: "M4 6h16v14H4zM8 3v4M16 3v4M4 10h16",
+    bell: "M6 16V11a6 6 0 0 1 12 0v5l2 2H4zM10 20a2 2 0 0 0 4 0", adapt: "M4 12a8 8 0 0 1 14-5l2-2v6h-6l2-2a5 5 0 1 0 1 6",
+  };
+  const STAGES = [
+    { k: "Interview", s: "11 questions", i: "chat", h: "It learns your life", p: "Your fixed commitments (work, classes, family), sleep, energy peaks, the hours you can honestly give, and your goals across career, health, money and learning. Import your calendar to skip typing.", c: ['<span class="c">› intake.parse(answers)</span>', '<span class="g">✓ 9 fixed commitments · 4 life areas</span>', '<span class="g">✓ 4 goals · peak energy: morning</span>', '<span class="d">  weekly budget: 14 h · Sundays off</span>'] },
+    { k: "Negotiate", s: "diff + approve", i: "nego", h: "You agree on the plan", p: "Gemini proposes milestones and weekly work that fit your hours and lighten your busiest weeks. You push back in plain English until it feels right, then lock it.", c: ['<span class="c">› planner.propose(semester)</span>', '<span class="g">✓ 16 milestones · 240 tasks · 12 months</span>', '<span class="a">~ proposal #2: lighten crunch month</span>', '<span class="g">✓ approved → plan v2 locked</span>'] },
+    { k: "Execute", s: "P1 · P2 · P3", i: "cal", h: "It builds your day", p: "A deterministic scheduler places tasks around your fixed commitments: high-energy work in your peak hours, focus blocks capped at 90 minutes, a daily cap you set.", c: ['<span class="c">› scheduler.buildDay(Mon)</span>', '<span class="g">✓ 7 blocks around work + gym</span>', '<span class="d">  06:45 P1 Deep work: landing page</span>', '<span class="d">  18:15 P2 Easy run, 25 min</span>'] },
+    { k: "Remind", s: "before every block", i: "bell", h: "It keeps pushing", p: "A reminder before each block, a nudge 15 minutes in if you haven't started, a morning brief and an evening review. Tone set by your coach: gentle, coach or drill sergeant.", c: ['<span class="a">18:50 Up next: Spanish lesson · P1</span>', '<span class="d">  [Start] [Snooze 15m] [Skip]</span>', '<span class="a">19:15 “Still waiting on you, Alex.”</span>', '<span class="g">✓ started 19:17</span>'] },
+    { k: "Adapt", s: "re-plans itself", i: "adapt", h: "It re-plans when life happens", p: "Missed blocks roll forward, optional work drops first, milestones only move with your approval. The Command Center flags risks before they become failures.", c: ['<span class="c">› replan(missed: 2)</span>', '<span class="a">~ Budget review → Sat 09:00</span>', '<span class="a">− Newsletter draft (optional)</span>', '<span class="g">✓ plan v3 · streak protected</span>'] },
+  ];
+  const pipe = $("#pipe");
+  STAGES.forEach((st, i) => {
+    const b = document.createElement("button"); b.className = "stage-btn";
+    b.innerHTML = `<span class="node"><svg viewBox="0 0 24 24"><path d="${ICON[st.i]}"/></svg></span><span class="lbl">${st.k}</span><span class="sub mono">${st.s}</span>`;
+    b.onclick = () => { setStage(i); stopCycle(); };
+    pipe.appendChild(b);
+  });
+  let stageI = 0, cycle = 0;
+  function setStage(i) {
+    stageI = i;
+    $$(".stage-btn").forEach((b, k) => b.classList.toggle("on", k === i));
+    const pct = (i / (STAGES.length - 1)) * 100;
+    $("#pipeFill").style.width = pct + "%"; $("#packet").style.left = `calc(${pct}% - 6px)`;
+    const st = STAGES[i];
+    const det = $("#pipeDetail");
+    det.innerHTML = `<div class="fade-swap"><div class="eyebrow" style="font-size:13px;margin-bottom:10px">Stage ${i + 1} of 5</div><h3>${st.h}</h3><p>${st.p}</p></div><div class="console fade-swap">${st.c.map((l, k) => `<div style="opacity:0;animation:rise2 .4s var(--ease) ${200 + k * 250}ms forwards">${l}</div>`).join("")}</div>`;
+  }
+  const stopCycle = () => clearInterval(cycle);
+  onEnter[4] = () => { setStage(0); stopCycle(); cycle = setInterval(() => setStage((stageI + 1) % STAGES.length), 3800); };
+  onLeave[4] = stopCycle;
+
+  // ---------- 5 · Negotiation ----------
+  const PROPS = {
+    midterms: { reply: "Lightened Nov 2–22. Optional tasks removed, side-project work shortened. Your primary tasks stay, so no goal date moves.", rows: [["rem", "Newsletter draft for side project", "optional · removed for crunch"], ["rem", "Mobility, 15 min", "optional · removed"], ["chg", "Side project: build signup flow", "90m → 60m"], ["chg", "Spanish lesson", "3x → 2x a week"], ["add", "Protected 7h sleep reminder", "P1 · every night during crunch"]] },
+    sick: { reply: "You're out until Wednesday. Primary and secondary tasks move to Thursday–Friday; optional ones drop. Milestones stay put.", rows: [["chg", "Interval run", "Tue → Thu"], ["chg", "Promo packet: impact section", "Wed → Thu · due Fri unchanged"], ["rem", "Compare savings accounts", "optional · dropped"], ["chg", "Side project: user interview", "Tue → Fri"], ["add", "30-min catch-up block", "Sat 09:00 · protects your streak"]] },
+    weekend: { reply: "Moved your 3 weekly runs to 06:45, before work, when your energy is highest.", rows: [["chg", "Easy run, 25 min", "Mon 18:15 → Mon 06:45"], ["chg", "Interval session", "Wed 18:15 → Wed 06:45"], ["chg", "Long run, 6 km", "Sat 17:00 → Sat 07:30"], ["chg", "Deep work: side project", "06:45 → 20:00 on run days"]] },
+  };
+  let version = 1, pending = null;
+  const msgs = $("#msgs");
+  function addMsg(cls, html) { const m = document.createElement("div"); m.className = `msg ${cls}`; m.innerHTML = html; msgs.appendChild(m); while (msgs.children.length > 5) msgs.firstChild.remove(); return m; }
+  $$("#sugg .chip").forEach((c) => (c.onclick = () => {
+    if (pending) return;
+    const P = PROPS[c.dataset.k];
+    addMsg("me", c.textContent);
+    const t = addMsg("ai", '<span class="typing"><i></i><i></i><i></i></span>');
+    $("#propStatus").textContent = "THINKING…"; $("#propStatus").style.color = "var(--accent)";
+    setTimeout(() => {
+      t.innerHTML = P.reply;
+      pending = P;
+      $("#propBody").innerHTML = P.rows.map(([op, l, r], i) => `<div class="diff" style="animation-delay:${i * 140}ms"><span class="op ${op}">${op === "add" ? "+" : op === "chg" ? "~" : "−"}</span><div><span class="${op === "rem" ? "strike" : ""}">${l}</span><small>${r}</small></div></div>`).join("");
+      $("#propStatus").textContent = `${P.rows.length} CHANGES · PENDING`; $("#propStatus").style.color = "var(--amber)";
+      ["#approveBtn", "#rejectBtn"].forEach((s) => { $(s).disabled = false; $(s).style.opacity = 1; });
+    }, 1100);
+  }));
+  function decide(ok) {
+    if (!pending) return;
+    ["#approveBtn", "#rejectBtn"].forEach((s) => { $(s).disabled = true; $(s).style.opacity = .4; });
+    const log = $("#log");
+    if (ok) {
+      version++;
+      const v = $("#ver"); v.textContent = `plan v${version}`; v.classList.add("bump"); setTimeout(() => v.classList.remove("bump"), 900);
+      $("#propStatus").textContent = "APPROVED · LOCKED"; $("#propStatus").style.color = "var(--green)";
+      log.insertAdjacentHTML("afterbegin", `<span style="color:var(--green)">user · approved → v${version}</span>`);
+      addMsg("ai", `Done. Plan v${version} is locked and today's schedule is rebuilt.`);
+    } else {
+      $("#propStatus").textContent = "REJECTED · NOTHING CHANGED"; $("#propStatus").style.color = "var(--red)";
+      $$("#propBody .diff").forEach((d) => (d.style.opacity = .35));
+      log.insertAdjacentHTML("afterbegin", `<span style="color:var(--red)">user · rejected</span>`);
+      addMsg("ai", "No problem. Your plan is unchanged.");
+    }
+    while (log.children.length > 3) log.lastChild.remove();
+    pending = null;
+  }
+  $("#approveBtn").onclick = () => decide(true); $("#rejectBtn").onclick = () => decide(false);
+
+  // ---------- 6 · Today ----------
+  const DAY = [
+    { t: "06:45", e: "08:15", ttl: "Deep work: side project landing page", tier: 1 },
+    { t: "09:00", e: "12:30", ttl: "Work", cls: 1 },
+    { t: "12:35", e: "12:55", ttl: "Move $150 to savings, log expenses", tier: 2 },
+    { t: "13:00", e: "17:30", ttl: "Work", cls: 1 },
+    { t: "18:15", e: "18:45", ttl: "Easy run, 25 minutes", tier: 2 },
+    { t: "19:00", e: "19:45", ttl: "Spanish lesson with tutor", tier: 1 },
+    { t: "20:00", e: "20:30", ttl: "Family call", cls: 1 },
+    { t: "21:00", e: "21:15", ttl: "Read 15 pages", tier: 3 },
+  ];
+  const dl = $("#dayline");
+  DAY.forEach((b, i) => {
+    const el = document.createElement("div");
+    el.className = `blk${b.cls ? " class" : ""}`; el.dataset.tier = b.tier || 0; el.dataset.i = i;
+    el.innerHTML = `<span class="time">${b.t}–${b.e}</span><span class="ttl" style="display:flex;gap:10px;align-items:center">${b.cls ? '<span class="tier t2" style="border-style:dashed">FIXED</span>' : `<span class="tier t${b.tier}">P${b.tier}</span>`}<span>${b.ttl}</span></span>${b.cls ? "<span></span>" : '<span class="acts"><button class="done-b">Done</button><button class="skip-b">Skip</button></span>'}`;
+    dl.appendChild(el);
+  });
+  let tierFilter = "all";
+  $$(".chip[data-tier]").forEach((c) => (c.onclick = () => {
+    tierFilter = c.dataset.tier;
+    $$(".chip[data-tier]").forEach((x) => x.setAttribute("aria-pressed", x === c ? "true" : "false"));
+    $$(".blk", dl).forEach((b) => b.classList.toggle("dim", tierFilter !== "all" && b.dataset.tier !== tierFilter));
+  }));
+  dl.addEventListener("click", (e) => {
+    const blk = e.target.closest(".blk"); if (!blk) return;
+    if (e.target.classList.contains("done-b")) { blk.classList.toggle("done"); updateBrief(); }
+    if (e.target.classList.contains("skip-b")) {
+      const b = DAY[+blk.dataset.i];
+      blk.classList.add("leaving");
+      setTimeout(() => {
+        blk.remove();
+        const list = $("#tmList"); if (list.querySelector("p")) list.innerHTML = "";
+        const slot = ["08:00", "11:05", "16:30", "19:00"][list.children.length % 4];
+        list.insertAdjacentHTML("beforeend", `<div class="it"><span class="tier t${b.tier}">P${b.tier}</span><span>${b.ttl}</span><span class="mono" style="margin-left:auto;color:var(--dim);font-size:14px">${b.tier === 3 ? "if time" : slot}</span></div>`);
+        updateBrief();
+      }, 500);
+    }
+  });
+  const COACH = {
+    gentle: { h: "Good morning, Alex.", o: "One step at a time today.", done: "Everything done. Be proud of today, and rest." },
+    coach: { h: "Let's go, Alex.", o: "Game day.", done: "Clean sweep. Same standard tomorrow." },
+    drill: { h: "Alex. Up.", o: "No excuses today.", done: "All done. Acceptable. Tomorrow, same standard." },
+  };
+  let coach = "coach";
+  function updateBrief() {
+    const left = $$(".blk:not(.class):not(.done)", dl);
+    const C = COACH[coach];
+    const p1 = left.find((b) => b.dataset.tier === "1");
+    $("#briefH").textContent = left.length ? C.h : C.done.split(".")[0] + ".";
+    $("#briefB").textContent = left.length
+      ? `${C.o} Your one thing: ${p1 ? p1.querySelector(".ttl span:last-child").textContent : left[0].querySelector(".ttl span:last-child").textContent}. ${left.length} blocks left around 8 hours of work. 12-day streak on the line.`
+      : C.done;
+  }
+  $$("#coachSeg button").forEach((b) => (b.onclick = () => { coach = b.dataset.c; $$("#coachSeg button").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false")); updateBrief(); }));
+  updateBrief();
+  const toast = $("#toast");
+  $("#remindBtn").onclick = () => { toast.classList.remove("show"); void toast.offsetWidth; toast.classList.add("show"); };
+  toast.addEventListener("click", (e) => {
+    const t = e.target.dataset.t; if (!t) return;
+    toast.classList.remove("show");
+    const target = $$(".blk", dl).find((b) => b.dataset.i === "5");
+    if (t === "start" && target) { target.style.borderColor = "var(--accent)"; target.style.background = "rgba(76,158,255,.1)"; }
+    if (t === "close" && target) target.querySelector(".skip-b")?.click();
+  });
+  function placeNow() { const rows = $$(".blk", dl); const ref = rows[3] || rows[rows.length - 1]; if (ref) $("#nowline").style.top = `${ref.offsetTop + ref.offsetHeight + 4}px`; }
+  onEnter[6] = () => setTimeout(placeNow, 400);
+
+  // ---------- 7 · Command Center ----------
+  const HEALTH = [
+    { g: "Launch side project · 100 users", c: "var(--accent)", st: "off", pct: 13, fixed: 38, due: "8 / 14 h" },
+    { g: "Save $5,000 by December", c: "var(--green)", st: "ok", pct: 46, fixed: 46, due: "$2,300 / $2,400" },
+    { g: "Run a 10K in November", c: "var(--amber)", st: "risk", pct: 32, fixed: 41, due: "5 / 7 h" },
+  ];
+  const lbl = { ok: "on track", risk: "at risk", off: "off track" };
+  function renderHealth() {
+    $("#health").innerHTML = `<div class="hrow" style="font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--dim);padding-block:12px"><span></span><span>GOAL</span><span>STATUS</span><span>PROGRESS</span><span></span></div>` +
+      HEALTH.map((h, i) => `<div class="hrow"><span class="dot" style="background:${h.c}"></span><span>${h.g}<span class="mono" style="display:block;font-size:13px;color:var(--dim)">${h.due} due so far</span></span><span class="hp ${h.st}" id="hp${i}">${lbl[h.st]}</span><span class="bar"><i id="hb${i}" style="background:${h.c}"></i></span><span class="mono" id="hv${i}" style="font-size:16px;color:var(--muted)">${h.pct}%</span></div>`).join("");
+  }
+  const RISKS = [
+    { t: "Milestone overdue: landing page live", d: "HIGH · side project · 5 tasks left", g: 0, sev: "" },
+    { t: "3 primary tasks missed this week", d: "MEDIUM · deep work sessions skipped", g: 0, sev: "med" },
+    { t: "Running 3x a week, due in 2 days", d: "MEDIUM · 10K · 3/6 sessions", g: 2, sev: "med" },
+  ];
+  function renderRisks() {
+    $("#risks").innerHTML = `<div class="eyebrow" style="font-size:12px;padding:4px 4px 6px">Risk feed</div>` + RISKS.map((r, i) => `<div class="risk ${r.sev}" id="rk${i}"><div>${r.t}<small>${r.d}</small></div><button data-r="${i}">Fix</button></div>`).join("");
+  }
+  function onTrackCount() { const n = HEALTH.filter((h) => h.st === "ok").length; $("#ccOn").textContent = `${n}/3`; $("#ccOn").style.color = n === 3 ? "var(--green)" : n === 2 ? "var(--amber)" : "var(--red)"; }
+  renderHealth(); renderRisks(); onTrackCount();
+  $("#risks").addEventListener("click", (e) => {
+    const i = e.target.dataset.r; if (i === undefined) return;
+    const r = RISKS[i], row = $(`#rk${i}`), btn = e.target;
+    if (row.classList.contains("fixed")) return;
+    btn.textContent = "…";
+    setTimeout(() => {
+      row.classList.add("fixed"); btn.textContent = "Approved ✓";
+      row.querySelector("small").textContent = "Re-plan approved · tasks spread over the next 6 days";
+      const h = HEALTH[r.g];
+      const stillOpen = RISKS.some((x, k) => x.g === r.g && !$(`#rk${k}`).classList.contains("fixed"));
+      if (!stillOpen) {
+        h.st = h.st === "off" ? "risk" : "ok";
+        if (r.g === 0 && h.st === "risk") h.st = "ok";
+        const hp = $(`#hp${r.g}`); hp.className = `hp ${h.st}`; hp.textContent = lbl[h.st];
+        $(`#hb${r.g}`).style.width = h.fixed + "%"; $(`#hv${r.g}`).textContent = h.fixed + "%";
+        onTrackCount();
+      }
+    }, 700);
+  });
+  onEnter[7] = () => setTimeout(() => HEALTH.forEach((h, i) => ($(`#hb${i}`).style.width = (h.st === "ok" && h.fixed !== h.pct ? h.fixed : h.pct) + "%")), 350);
+  onLeave[7] = () => {};
+
+  // ---------- 8 · Ontology graph (drag) ----------
+  const gc = $("#graph"), g = gc.getContext("2d");
+  let GW = 0, GH = 0, gRaf = 0, gRun = false, drag = null, hover = null;
+  const nodes = [], links = [];
+  function mk(id, label, kind, info, parent) { const n = { id, label, kind, info, x: 0, y: 0, vx: 0, vy: 0 }; nodes.push(n); if (parent) links.push([parent, n]); return n; }
+  const you = mk("you", "Alex", "you", "Alex · full-time job · 14 h/week for goals · peak energy: morning");
+  const gl = [
+    ["Side project", "var(--accent)", "#4c9eff", ["Landing page", "Signup flow", "100 users"], ["Deep work", "User interview", "Launch post"]],
+    ["Promotion", "var(--violet)", "#c38bff", ["Criteria clear", "Own a project", "Promo packet"], ["Impact notes", "1:1 prep"]],
+    ["Save $5,000", "var(--green)", "#3dd68c", ["Expenses tracked", "$2,500", "$5,000"], ["Auto-transfer", "Cancel subs"]],
+    ["Run a 10K", "var(--amber)", "#f2a33a", ["3x a week", "6 km long run", "Race day"], ["Easy run", "Intervals"]],
+  ];
+  const courses = ["Work 9–5:30", "Family call", "Gym", "Tutor"].map((c) => mk(c, c, "course", `Fixed commitment · ${c} · the scheduler plans around it`, null));
+  courses.forEach((c) => links.push([you, c]));
+  gl.forEach(([t, , hex, ms, ts]) => {
+    const gn = mk(t, t, "goal", `Goal · ${t} · ${ms.length} milestones`, you); gn.color = hex;
+    ms.forEach((m) => { const mn = mk(t + m, m, "milestone", `Milestone · ${m} · part of “${t}”`, gn); mn.color = hex; });
+    ts.forEach((x, k) => { const tn = mk(t + x, x, "task", `Task · ${x} · tier P${(k % 3) + 1}`, gn); tn.color = hex; });
+    if (t === "Promotion") links.push([gn, courses[0]]); if (t === "Run a 10K") links.push([gn, courses[2]]);
+  });
+  function sizeGraph() {
+    const r = gc.parentElement.getBoundingClientRect();
+    GW = r.width / scale; GH = r.height / scale;
+    const dpr = Math.min(2, devicePixelRatio || 1) * Math.max(1, scale);
+    gc.width = GW * dpr; gc.height = GH * dpr; gc.style.width = GW + "px"; gc.style.height = GH + "px";
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!nodes[0].x) nodes.forEach((n, i) => { n.x = GW / 2 + Math.cos(i) * (80 + i * 6); n.y = GH / 2 + Math.sin(i) * (60 + i * 5); });
+  }
+  const R = { you: 20, goal: 15, milestone: 8, task: 5, course: 9 };
+  function tick() {
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j]; let dx = b.x - a.x, dy = b.y - a.y; const d2 = dx * dx + dy * dy + .01; const f = 2600 / d2;
+      const d = Math.sqrt(d2); dx /= d; dy /= d; a.vx -= dx * f; a.vy -= dy * f; b.vx += dx * f; b.vy += dy * f;
+    }
+    for (const [a, b] of links) {
+      const want = a.kind === "you" ? 150 : b.kind === "course" ? 110 : 70;
+      let dx = b.x - a.x, dy = b.y - a.y; const d = Math.hypot(dx, dy) || 1; const f = (d - want) * .02;
+      dx /= d; dy /= d; a.vx += dx * f; a.vy += dy * f; b.vx -= dx * f; b.vy -= dy * f;
+    }
+    for (const n of nodes) {
+      n.vx += (GW / 2 - n.x) * .002; n.vy += (GH / 2 - n.y) * .002;
+      if (n === drag) { n.vx = n.vy = 0; continue; }
+      n.vx *= .82; n.vy *= .82; n.x += n.vx; n.y += n.vy;
+      n.x = Math.max(24, Math.min(GW - 24, n.x)); n.y = Math.max(24, Math.min(GH - 24, n.y));
+    }
+  }
+  function drawGraph(t) {
+    tick();
+    g.clearRect(0, 0, GW, GH);
+    for (const [a, b] of links) {
+      const hot = hover && (hover === a || hover === b);
+      g.strokeStyle = hot ? "rgba(76,158,255,.9)" : "rgba(138,153,167,.22)"; g.lineWidth = hot ? 1.8 : 1;
+      g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
+      if (!reduce) { const p = ((t / 1600) + (a.x + b.y) * .001) % 1; g.fillStyle = "rgba(47,211,208,.8)"; g.beginPath(); g.arc(a.x + (b.x - a.x) * p, a.y + (b.y - a.y) * p, 1.8, 0, 7); g.fill(); }
+    }
+    for (const n of nodes) {
+      const r = R[n.kind] * (n === hover ? 1.3 : 1);
+      const col = n.kind === "you" ? "#dde4ea" : n.kind === "course" ? "#2fd3d0" : n.kind === "task" ? "#c38bff" : n.color;
+      g.fillStyle = col;
+      if (n.kind === "milestone") { g.save(); g.translate(n.x, n.y); g.rotate(Math.PI / 4); g.fillRect(-r, -r, r * 2, r * 2); g.restore(); }
+      else { g.beginPath(); g.arc(n.x, n.y, r, 0, 7); g.fill(); }
+      if (n.kind === "you") { g.strokeStyle = "rgba(221,228,234,.3)"; g.beginPath(); g.arc(n.x, n.y, r + 8 + Math.sin(t / 400) * 3, 0, 7); g.stroke(); }
+      if (n.kind !== "task" || n === hover) {
+        g.fillStyle = n.kind === "course" ? "#2fd3d0" : "#dde4ea"; g.font = `${n.kind === "goal" || n.kind === "you" ? 600 : 400} ${n.kind === "course" ? 12 : 14}px Geist, system-ui, sans-serif`; g.textAlign = "center";
+        g.fillText(n.label, n.x, n.y + r + 16);
+      }
+    }
+    if (gRun) gRaf = requestAnimationFrame(drawGraph);
+  }
+  const toLocal = (e) => { const r = gc.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * GW, y: (e.clientY - r.top) / r.height * GH }; };
+  const pick = (p) => nodes.find((n) => Math.hypot(n.x - p.x, n.y - p.y) < R[n.kind] + 8);
+  gc.addEventListener("pointerdown", (e) => { const p = toLocal(e); drag = pick(p); if (drag) { gc.setPointerCapture(e.pointerId); gc.style.cursor = "grabbing"; } });
+  gc.addEventListener("pointermove", (e) => {
+    const p = toLocal(e);
+    if (drag) { drag.x = p.x; drag.y = p.y; }
+    const h = pick(p); hover = h || drag || null;
+    if (hover) $("#nodeInfo").innerHTML = `<span class="mono" style="font-size:13px;color:var(--accent);letter-spacing:.12em">${hover.kind.toUpperCase()}</span><br>${hover.info}`;
+  });
+  gc.addEventListener("pointerup", () => { drag = null; gc.style.cursor = "grab"; });
+  onEnter[8] = () => { setTimeout(() => { sizeGraph(); gRun = true; cancelAnimationFrame(gRaf); gRaf = requestAnimationFrame(drawGraph); }, 60); };
+  onLeave[8] = () => { gRun = false; cancelAnimationFrame(gRaf); };
+  addEventListener("resize", () => { if (cur === 8) sizeGraph(); });
+
+  // ---------- 9 · Architecture ----------
+  const BOX = [
+    { id: "user", x: 20, y: 185, w: 190, h: 100, t: "You", s: "phone · laptop · PWA", i: "Installs Momentum to the home screen. Works offline from a cached shell." },
+    { id: "app", x: 300, y: 150, w: 280, h: 170, t: "Next.js app", s: "React · Zustand · Tailwind", i: "Every screen: interview, plan, today, week, review, Command Center. Your whole life is one typed ontology." },
+    { id: "ai", x: 690, y: 20, w: 300, h: 110, t: "/api/ai → Gemini", s: "server-side key · Zod-validated", i: "Interview parsing, plan proposals, negotiation diffs and coach messages. Invalid output falls back to the offline engine." },
+    { id: "sched", x: 690, y: 180, w: 300, h: 110, t: "Deterministic scheduler", s: "8 unit tests · no LLM", i: "Places blocks around work, classes and family: 10-min buffers, peak-energy placement, 90-min focus cap, daily budget, locked blocks untouched." },
+    { id: "db", x: 690, y: 340, w: 300, h: 110, t: "Storage", s: "localStorage → Supabase + RLS", i: "Demo mode keeps data on the device. The Supabase schema (14 tables, row-level security) is written and ready." },
+    { id: "push", x: 1080, y: 110, w: 280, h: 110, t: "Reminders", s: "Notifications · Web Push", i: "A reminder before each block and a nudge 15 minutes in. Web Push via a 5-minute cron once the backend is live." },
+    { id: "cal", x: 1080, y: 270, w: 280, h: 110, t: "Calendar", s: ".ics import", i: "Import your work or class calendar from any app. Two-way Google Calendar sync is on the roadmap." },
+  ];
+  const WIRES = [["user", "app"], ["app", "ai"], ["app", "sched"], ["app", "db"], ["sched", "push"], ["app", "cal"]];
+  const byId = Object.fromEntries(BOX.map((b) => [b.id, b]));
+  const arch = $("#arch");
+  const ns = "http://www.w3.org/2000/svg";
+  const path = (a, b) => { const A = byId[a], B = byId[b]; const x1 = A.x + A.w, y1 = A.y + A.h / 2, x2 = B.x, y2 = B.y + B.h / 2; const mx = (x1 + x2) / 2; return `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`; };
+  let svg = "";
+  WIRES.forEach(([a, b], i) => { svg += `<path class="wire" id="w${i}" d="${path(a, b)}"/>`; });
+  BOX.forEach((b) => { svg += `<g class="box" data-id="${b.id}" tabindex="0"><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="16" stroke-width="1.5"/><text x="${b.x + 22}" y="${b.y + b.h / 2 - 4}" font-size="22" font-weight="600">${b.t}</text><text class="sub" x="${b.x + 22}" y="${b.y + b.h / 2 + 22}">${b.s}</text></g>`; });
+  WIRES.forEach((_, i) => { svg += `<circle r="5" fill="#2fd3d0"><animateMotion dur="${2.2 + (i % 3) * .5}s" repeatCount="indefinite" begin="${i * .35}s"><mpath href="#w${i}"/></animateMotion></circle>`; });
+  arch.innerHTML = svg;
+  $$(".box", arch).forEach((el) => {
+    const show = () => { $$(".box", arch).forEach((x) => x.classList.toggle("on", x === el)); const b = byId[el.dataset.id]; $("#archInfo").innerHTML = `<b style="color:var(--text)">${b.t}.</b> ${b.i}`; };
+    el.addEventListener("mouseenter", show); el.addEventListener("focus", show); el.addEventListener("click", show);
+  });
+
+  // ---------- 11 · Roadmap ----------
+  const PHASES = [
+    { n: "MVP", w: "DONE · SEP 2026", done: true, goal: "Everything in this presentation works today, in the browser, with or without an AI key.", items: ["Interview → profile, courses, schedule, goals", "Plan negotiation with diffs and versions", "Deterministic daily scheduler (tested)", "Today, Week, Review, Command Center", "Gemini with an offline fallback"] },
+    { n: "Accounts & push", w: "OCT 2026 · 1–2 WEEKS", goal: "Reminders that always arrive, on every device.", items: ["Google sign-in with Supabase", "Sync across phone and laptop", "Web Push when the app is closed", "Nightly re-plan + morning brief job", "Email fallback"] },
+    { n: "Smarter planning", w: "NOV 2026 · 2–3 WEEKS", goal: "A plan that learns how you actually work.", items: ["Two-way Google Calendar sync", "Upload a syllabus or project brief → deadlines extracted", "Real vs estimated time per task type", "Energy model from check-ins", "Voice check-ins"] },
+    { n: "Gym-buddy layer", w: "DEC 2026 · 2 WEEKS", goal: "The accountability of a friend, built in.", items: ["Pair with a friend, see each other's P1", "Live study rooms", "Weekly shareable report", "Streak protection on bad days"] },
+    { n: "Native & teams", w: "2027", goal: "From one life to teams, coaches and campuses.", items: ["Android and iOS apps with widgets", "Coach and campus editions", "Template library: marathon, promotion, emergency fund", "Pro tier and team licences"] },
+  ];
+  const road = $("#road");
+  PHASES.forEach((p, i) => {
+    const b = document.createElement("button"); b.className = `phase${p.done ? " done" : ""}`;
+    b.innerHTML = `<span class="pin">${p.done ? "✓" : "0" + (i + 1)}</span><span class="name">${p.n}</span><span class="when">${p.w}</span>`;
+    b.onclick = () => setPhase(i); road.appendChild(b);
+  });
+  function setPhase(i) {
+    $$(".phase", road).forEach((b, k) => b.classList.toggle("on", k === i));
+    const p = PHASES[i];
+    $("#roadDetail").innerHTML = `<div class="fade-swap"><div class="eyebrow" style="font-size:13px;margin-bottom:10px;color:${p.done ? "var(--green)" : "var(--accent)"}">Phase ${i + 1} · ${p.done ? "shipped" : "next"}</div><h3>${p.n}</h3><p class="goal">${p.goal}</p></div><ul class="fade-swap ${p.done ? "done-li" : ""}">${p.items.map((x, k) => `<li style="opacity:0;animation:rise2 .45s var(--ease) ${k * 90}ms forwards">${x}</li>`).join("")}</ul>`;
+  }
+  setPhase(0);
+
+  // ---------- Start ----------
+  const m = location.hash.match(/^#s(\d+)$/);
+  go(m ? Math.min(N - 1, +m[1]) : 0);
+})();
+</script>
+
+</body>
+</html>
